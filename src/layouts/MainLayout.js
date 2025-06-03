@@ -1,4 +1,5 @@
 import { createElement } from '../component';
+import { createMiniSidebar } from '../components/Sidebar/MiniSidebar';
 import { createSidebarHeader } from '../components/Sidebar/SidebarHeader';
 import { createSearchBar } from '../components/Sidebar/SearchBar';
 import { createChatItem } from '../components/Chat/ChatItem';
@@ -7,10 +8,15 @@ import { createMessageInput } from '../components/Chat/MessageInput';
 
 export function createMainLayout() {
   const layout = createElement('div', {
-    class: ['flex', 'h-screen', 'bg-[#f0f2f5]']
+    class: ['flex', 'h-screen']
   }, [
-    createSidebar(),
-    createChatArea()
+    createMiniSidebar(),
+    createElement('div', {
+      class: ['flex', 'flex-1']
+    }, [
+      createSidebar(),
+      createChatArea()
+    ])
   ]);
 
   return layout;
@@ -18,7 +24,14 @@ export function createMainLayout() {
 
 function createSidebar() {
   return createElement('div', {
-    class: ['w-[400px]', 'bg-white', 'border-r', 'border-[#d1d7db]', 'flex', 'flex-col']
+    class: [
+      'w-[400px]',
+      'bg-white',
+      'flex',
+      'flex-col',
+      'border-r',
+      'border-[#d1d7db]'
+    ]
   }, [
     createSidebarHeader(),
     createSearchBar(),
