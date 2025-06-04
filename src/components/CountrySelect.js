@@ -15,9 +15,9 @@ export function createCountrySelect(props = {}) {
     ],
     ...props
   }, [
-    createElement('option', { value: 'SN' }, '🇸🇳 Sénégal (+221)'),
-    createElement('option', { value: 'FR' }, '🇫🇷 France (+33)'),
-    createElement('option', { value: 'BE' }, '🇧🇪 Belgique (+32)'),
-    createElement('option', { value: 'CH' }, '🇨🇭 Suisse (+41)')
+    createElement('option', { value: 'SN' }, '🇸🇳 +221'),
+    createElement('option', { value: 'FR' }, '🇫🇷 +33'),
+    createElement('option', { value: 'BE' }, '🇧🇪 +32'),
+    createElement('option', { value: 'CH' }, '🇨🇭 +41')
   ]);
 }

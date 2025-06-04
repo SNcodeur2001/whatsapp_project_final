@@ -23,3 +23,17 @@ body {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.group:hover .group-hover\:text-\[\#00a884\] {
+  color: #00a884;
+  transition: color 0.2s ease;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
