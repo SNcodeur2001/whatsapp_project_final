@@ -74,6 +74,18 @@
       "replyTo": null,
       "forwarded": false
     },
+     {
+      "id": 126,
+      "chatId": 1,
+      "senderId": 2,
+      "type": "text", 
+      "content": "Hello",
+      "timestamp": "2024-06-04T17:26:00Z",
+      "status": "read", 
+      "reactions": [],
+      "replyTo": null,
+      "forwarded": false
+    },
     {
       "id": 456,
       "chatId": 2,

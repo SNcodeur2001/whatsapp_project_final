@@ -1,24 +1,93 @@
 import { createElement } from '../../component';
 
 export function createMessageInput() {
-  return createElement('div', {
-    class: ['h-[62px]', 'bg-[#f0f2f5]', 'flex', 'items-center', 'px-4', 'gap-2']
+  const inputContainer = createElement('div', {
+    class: [
+      'bg-[#f0f2f5]',
+      'px-4',
+      'py-3',
+      'flex',
+      'items-center',
+      'gap-4'
+    ]
   }, [
-    createElement('i', { class: ['fas', 'fa-smile', 'text-[#54656f]', 'cursor-pointer'] }),
-    createElement('i', { class: ['fas', 'fa-paperclip', 'text-[#54656f]', 'cursor-pointer'] }),
-    createElement('input', {
-      type: 'text',
-      placeholder: 'Tapez un message',
+    // Emoji button
+    createElement('i', {
+      class: [
+        'fas',
+        'fa-smile',
+        'text-[#54656f]',
+        'text-xl',
+        'cursor-pointer'
+      ]
+    }),
+    
+    // Attachment button
+    createElement('i', {
+      class: [
+        'fas',
+        'fa-paperclip',
+        'text-[#54656f]',
+        'text-xl',
+        'cursor-pointer'
+      ]
+    }),
+
+    // Input field wrapper
+    createElement('div', {
       class: [
         'flex-1',
-        'h-[42px]',
         'bg-white',
         'rounded-lg',
         'px-4',
-        'focus:outline-none',
-        'placeholder-[#667781]'
+        'py-2',
+        'flex',
+        'items-center',
+        'gap-4'
       ]
-    }),
-    createElement('i', { class: ['fas', 'fa-microphone', 'text-[#54656f]', 'cursor-pointer'] })
+    }, [
+      createElement('input', {
+        type: 'text',
+        placeholder: 'Tapez un message',
+        class: [
+          'flex-1',
+          'focus:outline-none',
+          'text-[#111b21]'
+        ]
+      }),
+      // Send button
+      createElement('button', {
+        class: [
+          'text-[#54656f]',
+          'hover:text-[#00a884]',
+          'transition-colors'
+        ],
+        onclick: () => {
+          const input = inputContainer.querySelector('input');
+          if (input.value.trim()) {
+            // TODO: Implement send message
+            console.log('Sending message:', input.value);
+            input.value = '';
+          }
+        }
+      }, [
+        createElement('i', {
+          class: ['fas', 'fa-paper-plane']
+        })
+      ])
+    ]),
+
+    // Voice message button
+    createElement('i', {
+      class: [
+        'fas',
+        'fa-microphone',
+        'text-[#54656f]',
+        'text-xl',
+        'cursor-pointer'
+      ]
+    })
   ]);
+
+  return inputContainer;
 }
