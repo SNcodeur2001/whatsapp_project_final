@@ -24,6 +24,7 @@
       "id": 1,
       "type": "individual", 
       "participants": [1, 2], 
+      "name": "John Doe Ndiaye", 
       "avatar": null,
       "createdAt": "2024-06-01T08:00:00Z",
       "lastMessage": {

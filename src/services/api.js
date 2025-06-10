@@ -96,7 +96,7 @@ export async function loadMessages(chatId) {
     const allMessages = await response.json();
     
     // Filtrer les messages pour ce chat
-    const chatMessages = allMessages.filter(message => message.chatId === chatId);
+    const chatMessages = allMessages.filter(message => Number(message.chatId) === Number(chatId));
     
     // Mettre à jour le store
     store.setState({
