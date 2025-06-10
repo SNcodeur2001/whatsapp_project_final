@@ -1,6 +1,6 @@
-import './index.css';
-import { router } from './utils/router';
-import { initializeData, checkAuthState } from './services/api';
+import "./index.css";
+import { router } from "./utils/router";
+import { initializeData, checkAuthState } from "./services/api";
 
 // Charger les données avant de démarrer l'application
 async function startApp() {
@@ -9,12 +9,12 @@ async function startApp() {
     const savedUser = checkAuthState();
     if (savedUser) {
       await initializeData();
-      router.navigate('/chat');
+      router.navigate("/chat");
     } else {
-      router.navigate('/');
+      router.navigate("/");
     }
   } catch (error) {
-    console.error('Erreur au démarrage:', error);
+    console.error("Erreur au démarrage:", error);
   }
 }
 

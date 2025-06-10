@@ -18,11 +18,7 @@ export function createChatsSidebar() {
     const chatsList = createElement("div", {
       class: ["flex-1", "overflow-y-auto"],
     });
-    //    console.log('Rendering chats with state:', {
-    //   currentUser: store.state.currentUser,
-    //   chats: store.state.chats,
-    //   messages: store.state.messages
-    // });
+ 
 
     store.state.chats.forEach((chat) => {
       const chatItem = createChatItem(chat);

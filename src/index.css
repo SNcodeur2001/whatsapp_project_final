@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   height: 100vh;
   margin: 0;
   padding: 0;
@@ -11,7 +12,8 @@ html, body {
 
 body {
   height: 100vh;
-  font-family: Segoe UI, Helvetica Neue, Helvetica, Lucida Grande, Arial, Ubuntu, Cantarell, Fira Sans, sans-serif;
+  font-family: Segoe UI, Helvetica Neue, Helvetica, Lucida Grande, Arial, Ubuntu,
+    Cantarell, Fira Sans, sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: #efeae2;
 }
@@ -22,7 +24,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-track {

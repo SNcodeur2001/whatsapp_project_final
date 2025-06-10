@@ -2,7 +2,7 @@ import { createElement } from "../../component";
 
 export function createMiniSidebar() {
   // console.log("je suis le sidebar");
-  
+
   return createElement(
     "div",
     {
@@ -69,7 +69,12 @@ export function createMiniSidebar() {
   );
 }
 
-function createNavItem(name, iconClass, isActive = false, notificationCount = null) {
+function createNavItem(
+  name,
+  iconClass,
+  isActive = false,
+  notificationCount = null
+) {
   const navItem = createElement(
     "div",
     {
@@ -87,18 +92,15 @@ function createNavItem(name, iconClass, isActive = false, notificationCount = nu
       ],
     },
     [
-      createElement(
-        "i",
-        {
-          class: [
-            "fas",
-            iconClass,
-            "text-2xl",
-            isActive ? "text-[#00a884]" : "text-[#54656f]", // Changed inactive color
-            "group-hover:text-[#00a884]",
-          ],
-        }
-      ),
+      createElement("i", {
+        class: [
+          "fas",
+          iconClass,
+          "text-2xl",
+          isActive ? "text-[#00a884]" : "text-[#54656f]", // Changed inactive color
+          "group-hover:text-[#00a884]",
+        ],
+      }),
     ]
   );
 

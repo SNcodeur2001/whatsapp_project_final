@@ -5,7 +5,7 @@ class Store {
       chats: [],
       currentChat: null,
       messages: [],
-      currentUser: null
+      currentUser: null,
     };
     this.listeners = new Set();
   }
@@ -16,7 +16,7 @@ class Store {
   }
 
   notify() {
-    this.listeners.forEach(listener => listener(this.state));
+    this.listeners.forEach((listener) => listener(this.state));
   }
 
   setState(newState) {

@@ -22,9 +22,9 @@
   "chats": [
     {
       "id": 1,
-      "type": "individual", 
-      "participants": [1, 2], 
-      "name": "John Doe Ndiaye", 
+      "type": "individual",
+      "participants": [1, 2],
+      "name": "John Doe Ndiaye",
       "avatar": null,
       "createdAt": "2024-06-01T08:00:00Z",
       "lastMessage": {
@@ -66,26 +66,28 @@
       "id": 123,
       "chatId": 1,
       "senderId": 1,
-      "type": "text", 
+      "type": "text",
       "content": "Il reste l'adaptateur au niveau de la configuration réseau",
       "timestamp": "2024-06-04T17:26:00Z",
-      "status": "read", 
+      "status": "read",
       "reactions": [],
       "replyTo": null,
       "forwarded": false
     },
-     {
+
+    {
       "id": 126,
       "chatId": 1,
       "senderId": 2,
-      "type": "text", 
+      "type": "text",
       "content": "Hello",
       "timestamp": "2024-06-04T17:26:00Z",
-      "status": "read", 
+      "status": "read",
       "reactions": [],
       "replyTo": null,
       "forwarded": false
     },
+
     {
       "id": 456,
       "chatId": 2,
