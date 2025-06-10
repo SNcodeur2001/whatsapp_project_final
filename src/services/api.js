@@ -1,13 +1,20 @@
 import { store } from "../store/store";
 
+const API_BASE_URL = 'https://whatsapp-json-server.onrender.com';
+const API_ENDPOINTS = {
+  USERS: `${API_BASE_URL}/users`,
+  CHATS: `${API_BASE_URL}/chats`,
+  MESSAGES: `${API_BASE_URL}/messages`
+};
+
 async function fetchUsers() {
-  const response = await fetch("http://localhost:3000/users");
+  const response = await fetch(API_ENDPOINTS.USERS);
   const data = await response.json();
   return data;
 }
 
 async function fetchChats() {
-  const response = await fetch("http://localhost:3000/chats");
+  const response = await fetch(API_ENDPOINTS.CHATS);
   const data = await response.json();
   return data;
 }
@@ -18,7 +25,7 @@ function normalizeId(id) {
 }
 
 async function fetchMessages(chatId) {
-  const response = await fetch("http://localhost:3000/messages");
+  const response = await fetch(API_ENDPOINTS.MESSAGES);
   const data = await response.json();
 
   return data.filter(
@@ -99,7 +106,7 @@ export async function loadMessages(chatId) {
     console.log("Loading messages for chat:", chatId);
     const normalizedChatId = normalizeId(chatId);
 
-    const response = await fetch("http://localhost:3000/messages");
+    const response = await fetch(API_ENDPOINTS.MESSAGES);
     const allMessages = await response.json();
 
     const chatMessages = allMessages.filter(
