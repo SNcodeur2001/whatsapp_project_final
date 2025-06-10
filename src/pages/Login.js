@@ -3,6 +3,7 @@ import { createLogo } from '../components/Logo';
 import { createCountrySelect } from '../components/CountrySelect';
 import { api } from '../services/api';
 import { router } from '../utils/router';
+import { store } from '../store/store';
 
 export function createLoginPage() {
   const container = createElement('div', {
@@ -104,7 +105,6 @@ export function createLoginPage() {
     ])
   ]);
 
-  // Gestion de la connexion
   const button = form.querySelector('button');
   const countrySelect = form.querySelector('#country-code');
   const phoneInput = form.querySelector('#phone-number');
@@ -126,10 +126,11 @@ export function createLoginPage() {
       
       // Construire le numéro complet
       const fullPhoneNumber = `${countryPrefixes[countryCode]}${phoneNumber}`;
-      
+      console.log('État avant connexion:', store.state);
+
       // Tentative de connexion avec le numéro complet
       await api.login(fullPhoneNumber);
-      
+      console.log('État après connexion:', store.state);
       router.navigate('/chat');
     } catch (error) {
       errorMessage.textContent = 'Numéro de téléphone invalide';

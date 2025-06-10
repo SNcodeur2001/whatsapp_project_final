@@ -17,8 +17,12 @@ export function createChatHeader() {
     createElement('div', {
       class: ['flex', 'gap-6', 'text-[#54656f]']
     }, [
-      createElement('span', { class: ['cursor-pointer'] }, '🔍'),
-      createElement('span', { class: ['cursor-pointer'] }, '⋮')
+      createElement('i', { 
+        class: ['fas', 'fa-search', 'cursor-pointer'] 
+      }),
+      createElement('i', { 
+        class: ['fas', 'fa-ellipsis-v', 'cursor-pointer'] 
+      })
     ])
   ]);
 }

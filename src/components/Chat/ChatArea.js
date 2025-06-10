@@ -1,5 +1,7 @@
 import { createElement } from '../../component';
 import { store } from '../../store/store';
+import { createChatHeader } from './ChatHeader';
+import { createMessageInput } from './MessageInput';
 
 export function createChatArea() {
   const chatArea = createElement('div', {
@@ -21,8 +23,11 @@ export function createChatArea() {
     chatArea.innerHTML = '';
     
     if (store.state.currentChat) {
+      // Trouvons le chat actuel
+      const currentChat = store.state.chats.find(c => c.id === store.state.currentChat);
+      
       chatArea.append(
-        createChatHeader(store.state.currentChat),
+        createChatHeader(currentChat), // Passer le chat actuel
         renderMessages(),
         createMessageInput()
       );

@@ -1,6 +1,8 @@
 import { createElement } from "../../component";
 
 export function createMiniSidebar() {
+  // console.log("je suis le sidebar");
+  
   return createElement(
     "div",
     {
@@ -17,7 +19,7 @@ export function createMiniSidebar() {
     },
     [
       // Messages icon with notification
-      createNavItem("chat", "💬", true, "72"),
+      createNavItem("chat", "fa-comments", true, "72"),
       // Status icon with green dot
       createElement(
         "div",
@@ -25,7 +27,7 @@ export function createMiniSidebar() {
           class: ["relative"],
         },
         [
-          createNavItem("status", "○"),
+          createNavItem("status", "fa-circle"),
           createElement("div", {
             class: [
               "w-[6px]",
@@ -40,16 +42,16 @@ export function createMiniSidebar() {
         ]
       ),
       // Communities icon
-      createNavItem("communities", "👥"),
+      createNavItem("communities", "fa-users"),
       // Channel icon
-      createNavItem("channels", "📢"),
+      createNavItem("channels", "fa-broadcast-tower"),
       // Settings at bottom
       createElement(
         "div",
         {
           class: ["mt-auto"],
         },
-        [createNavItem("settings", "⚙️")]
+        [createNavItem("settings", "fa-cog")]
       ),
       // Profile picture at bottom
       createElement("div", {
@@ -67,7 +69,7 @@ export function createMiniSidebar() {
   );
 }
 
-function createNavItem(name, icon, isActive = false, notificationCount = null) {
+function createNavItem(name, iconClass, isActive = false, notificationCount = null) {
   const navItem = createElement(
     "div",
     {
@@ -86,15 +88,16 @@ function createNavItem(name, icon, isActive = false, notificationCount = null) {
     },
     [
       createElement(
-        "span",
+        "i",
         {
           class: [
+            "fas",
+            iconClass,
             "text-2xl",
             isActive ? "text-[#00a884]" : "text-[#54656f]", // Changed inactive color
             "group-hover:text-[#00a884]",
           ],
-        },
-        icon
+        }
       ),
     ]
   );
