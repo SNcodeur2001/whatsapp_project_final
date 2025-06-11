@@ -257,13 +257,13 @@ function createChatItem(chat) {
   );
 }
 
-async function fetchUsers() {
-  const response = await fetch("http://localhost:3000/users");
-  const data = await response.json();
+// async function fetchUsers() {
+//   const response = await fetch("http://localhost:3000/users");
+//   const data = await response.json();
 
-  // Convertir les IDs en nombres
-  return data.map((user) => ({
-    ...user,
-    id: Number(user.id), // Force la conversion en nombre
-  }));
-}
+//   // Convertir les IDs en nombres
+//   return data.map((user) => ({
+//     ...user,
+//     id: Number(user.id), // Force la conversion en nombre
+//   }));
+// }

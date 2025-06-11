@@ -4,6 +4,7 @@ import { createCountrySelect } from "../components/CountrySelect";
 import { api } from "../services/api";
 import { router } from "../utils/router";
 import { store } from "../store/store";
+import { createRegisterPage } from "./register";
 
 export function createLoginPage() {
   const container = createElement("div", {
@@ -154,6 +155,26 @@ export function createLoginPage() {
             },
             "Se connecter"
           ),
+          createElement(
+            "div",
+            {
+              class: ["text-end", "mt-4"],
+            },
+            [
+              createElement(
+                "a",
+                {
+                  class: ["text-[#00a884]", "text-sm"],
+                  href: "/register",
+                  onClick: (e) => {
+                    e.preventDefault();
+                    router.navigate("/register");
+                  }
+                },
+                "S'inscrire"
+              ),
+            ]
+          )
         ]
       ),
     ]
@@ -195,4 +216,5 @@ export function createLoginPage() {
   container.appendChild(topBar);
   container.appendChild(form);
   return container;
+
 }

@@ -123,3 +123,14 @@ export async function loadMessages(chatId) {
     console.error("Error:", error);
   }
 }
+
+
+export async function register(nom,phone){
+  const response = await fetch(API_ENDPOINTS.USERS, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ nom, phone }),
+  });
+}

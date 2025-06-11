@@ -1,6 +1,7 @@
 import { createLoginPage } from "../pages/Login";
 import { createMainLayout } from "../layouts/MainLayout";
 import { store } from "../store/store";
+import { createRegisterPage } from "../pages/register";
 
 export const router = {
   navigate: (route) => {
@@ -25,6 +26,8 @@ export const router = {
         const layout = createMainLayout();
         body.appendChild(layout);
         break;
+        case "/register":
+          body.appendChild(createRegisterPage());
       default:
         body.appendChild(createLoginPage());
     }
