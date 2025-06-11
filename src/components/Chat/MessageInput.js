@@ -1,96 +1,76 @@
 import { createElement } from "../../component";
+import { sendMessage } from "../../services/api";
+import { store } from "../../store/store";
 
 export function createMessageInput() {
-  const inputContainer = createElement(
-    "div",
+  const inputContainer = createElement("div", {
+    class: ["bg-[#f0f2f5]", "px-4", "py-3", "flex", "items-center", "gap-4"],
+  });
+
+  // Créer l'input en dehors pour y avoir accès dans l'événement onclick
+  const input = createElement("input", {
+    type: "text",
+    placeholder: "Tapez un message",
+    class: ["flex-1", "focus:outline-none", "text-[#111b21]"],
+  });
+
+  const sendButton = createElement(
+    "button",
     {
-      class: ["bg-[#f0f2f5]", "px-4", "py-3", "flex", "items-center", "gap-4"],
+      class: [
+        "text-[#54656f]",
+        "hover:text-[#00a884]",
+        "transition-colors",
+      ],
+      onclick: async () => {
+        const message = input.value.trim();
+        if (message && store.state.currentChat) {
+          try {
+            await sendMessage(store.state.currentChat, message);
+            input.value = "";
+          } catch (error) {
+            console.error("Failed to send message:", error);
+          }
+        }
+      },
     },
     [
-      // Emoji button
       createElement("i", {
-        class: [
-          "fas",
-          "fa-smile",
-          "text-[#54656f]",
-          "text-xl",
-          "cursor-pointer",
-        ],
-      }),
-
-      // Attachment button
-      createElement("i", {
-        class: [
-          "fas",
-          "fa-paperclip",
-          "text-[#54656f]",
-          "text-xl",
-          "cursor-pointer",
-        ],
-      }),
-
-      // Input field wrapper
-      createElement(
-        "div",
-        {
-          class: [
-            "flex-1",
-            "bg-white",
-            "rounded-full",
-            "px-4",
-            "py-2",
-            "flex",
-            "items-center",
-            "gap-4",
-            "shadow-sm",
-            "hover:shadow-md",
-            "transition-all",
-          ],
-        },
-        [
-          createElement("input", {
-            type: "text",
-            placeholder: "Tapez un message",
-            class: ["flex-1", "focus:outline-none", "text-[#111b21]"],
-          }),
-          // Send button
-          createElement(
-            "button",
-            {
-              class: [
-                "text-[#54656f]",
-                "hover:text-[#00a884]",
-                "transition-colors",
-              ],
-              onclick: () => {
-                const input = inputContainer.querySelector("input");
-                if (input.value.trim()) {
-                  // TODO: Implement send message
-                  console.log("Sending message:", input.value);
-                  input.value = "";
-                }
-              },
-            },
-            [
-              createElement("i", {
-                class: ["fas", "fa-paper-plane"],
-              }),
-            ]
-          ),
-        ]
-      ),
-
-      // Voice message button
-      createElement("i", {
-        class: [
-          "fas",
-          "fa-microphone",
-          "text-[#54656f]",
-          "text-xl",
-          "cursor-pointer",
-        ],
+        class: ["fas", "fa-paper-plane"],
       }),
     ]
+  );
+
+  // Wrapper pour l'input et le bouton
+  const inputWrapper = createElement(
+    "div",
+    {
+      class: [
+        "flex-1",
+        "bg-white",
+        "rounded-full",
+        "px-4",
+        "py-2",
+        "flex",
+        "items-center",
+        "gap-4",
+      ],
+    },
+    [input, sendButton]
+  );
+
+  // Ajout de tous les éléments
+  inputContainer.append(
+    createElement("i", {
+      class: ["fas", "fa-smile", "text-[#54656f]", "text-xl", "cursor-pointer"],
+    }),
+    createElement("i", {
+      class: ["fas", "fa-paperclip", "text-[#54656f]", "text-xl", "cursor-pointer"],
+    }),
+    inputWrapper,
+    createElement("i", {
+      class: ["fas", "fa-microphone", "text-[#54656f]", "text-xl", "cursor-pointer"],
+    })
   );
 
   return inputContainer;

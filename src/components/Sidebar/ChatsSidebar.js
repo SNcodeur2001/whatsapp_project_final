@@ -1,6 +1,6 @@
 import { createElement } from "../../component";
 import { store } from "../../store/store";
-import { loadMessages } from "../../services/api";
+import { loadMessages, addContact } from "../../services/api";
 
 export function createChatsSidebar() {
   const sidebar = createElement("div", {
@@ -11,6 +11,7 @@ export function createChatsSidebar() {
       "flex-col",
       "border-r",
       "border-[#d1d7db]",
+      "relative", // Ajout pour le positionnement du bouton
     ],
   });
 
@@ -62,7 +63,8 @@ export function createChatsSidebar() {
       createHeader(),
       createSearchSection(),
       createArchivedSection(),
-      renderChats()
+      renderChats(),
+      createAddContactButton() // 👈 Ajout du bouton ici
     );
   }
 
@@ -291,6 +293,42 @@ function createChatItem(chat) {
           ),
         ]
       ),
+    ]
+  );
+}
+
+function createAddContactButton() {
+  return createElement(
+    "button",
+    {
+      class: [
+        "fixed",
+        "bottom-4",
+        "right-4",
+        "bg-[#00a884]",
+        "text-white",
+        "rounded-full",
+        "w-12",
+        "h-12",
+        "flex",
+        "items-center",
+        "justify-center",
+        "shadow-lg",
+        "hover:bg-[#008069]",
+      ],
+      onclick: () => {
+        const phone = prompt("Entrez le numéro de téléphone du contact :");
+        if (phone) {
+          addContact(phone).catch((error) => {
+            alert("Erreur : " + error.message);
+          });
+        }
+      },
+    },
+    [
+      createElement("i", {
+        class: ["fas", "fa-user-plus"],
+      }),
     ]
   );
 }

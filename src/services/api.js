@@ -152,3 +152,122 @@ export async function register(nom, phone) {
   const data = await response.json();
   console.log("Utilisateur inscrit :", data);
 }
+
+export async function sendMessage(chatId, content) {
+  try {
+    const newMessage = {
+      id: Date.now(),
+      chatId: Number(chatId),
+      senderId: store.state.currentUser.id,
+      type: "text",
+      content,
+      timestamp: new Date().toISOString(),
+      status: "sent",
+      reactions: [],
+      replyTo: null,
+      forwarded: false
+    };
+
+    const response = await fetch(`${API_ENDPOINTS.MESSAGES}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newMessage)
+    });
+
+    const savedMessage = await response.json();
+
+    // Mise à jour du lastMessage du chat
+    await fetch(`${API_ENDPOINTS.CHATS}/${chatId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        lastMessage: {
+          messageId: savedMessage.id,
+          content: content,
+          timestamp: savedMessage.timestamp,
+          senderId: store.state.currentUser.id
+        }
+      })
+    });
+
+    // Mettre à jour le store
+    store.setState({
+      messages: [...store.state.messages, savedMessage]
+    });
+
+    return savedMessage;
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
+}
+
+export function startMessagePolling(chatId) {
+  return setInterval(async () => {
+    const response = await fetch(`${API_ENDPOINTS.MESSAGES}?chatId=${chatId}&_sort=timestamp&_order=desc`);
+    const messages = await response.json();
+    
+    if (messages.length !== store.state.messages.length) {
+      store.setState({ messages });
+    }
+  }, 3000); // Check every 3 seconds
+}
+
+export async function addContact(contactPhone) {
+  try {
+    const users = await fetchUsers();
+    const contactToAdd = users.find(u => u.phone === contactPhone);
+    
+    if (!contactToAdd) {
+      throw new Error('Utilisateur non trouvé');
+    }
+
+    const currentUser = store.state.currentUser;
+    const updatedContacts = [...(currentUser.contacts || []), contactToAdd.id];
+
+    // Mettre à jour les contacts de l'utilisateur
+    const response = await fetch(`${API_ENDPOINTS.USERS}/${currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contacts: updatedContacts
+      })
+    });
+
+    const updatedUser = await response.json();
+    
+    // Mettre à jour le store et localStorage
+    store.setState({ 
+      currentUser: updatedUser
+    });
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+    // Créer un nouveau chat avec le contact
+    const newChat = {
+      id: Date.now(),
+      type: 'individual',
+      participants: [currentUser.id, contactToAdd.id],
+      name: contactToAdd.name,
+      avatar: null,
+      createdAt: new Date().toISOString(),
+      lastMessage: null,
+      unreadCount: 0,
+      pinned: false,
+      archived: false
+    };
+
+    await fetch(`${API_ENDPOINTS.CHATS}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newChat)
+    });
+
+    // Recharger les chats
+    const chats = await fetchChats();
+    store.setState({ chats });
+
+    return updatedUser;
+  } catch (error) {
+    console.error('Error adding contact:', error);
+    throw error;
+  }
+}

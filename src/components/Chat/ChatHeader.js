@@ -1,7 +1,9 @@
 import { createElement } from "../../component";
 import { store } from "../../store/store";
 
-export function createChatHeader() {
+export function createChatHeader(currentChat) {
+  if (!currentChat) return null;
+
   return createElement(
     "div",
     {
@@ -31,7 +33,7 @@ export function createChatHeader() {
             {
               class: ["text-[#111b21]", "font-medium"],
             },
-            store.state.currentChat.name || "Sans nom"
+            currentChat.name
           ),
         ]
       ),
