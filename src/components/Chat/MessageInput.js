@@ -36,12 +36,15 @@ export function createMessageInput() {
           class: [
             "flex-1",
             "bg-white",
-            "rounded-lg",
+            "rounded-full",
             "px-4",
             "py-2",
             "flex",
             "items-center",
             "gap-4",
+            "shadow-sm",
+            "hover:shadow-md",
+            "transition-all",
           ],
         },
         [

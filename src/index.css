@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary: #00a884;
+  --secondary: #111b21;
+  --light-bg: #f0f2f5;
+  --chat-bg: #efeae2;
+}
 
 html,
 body {
@@ -12,19 +21,24 @@ body {
 
 body {
   height: 100vh;
-  font-family: Segoe UI, Helvetica Neue, Helvetica, Lucida Grande, Arial, Ubuntu,
-    Cantarell, Fira Sans, sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: #efeae2;
 }
 
+/* Animations douces */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Scrollbar stylisée */
 ::-webkit-scrollbar {
-  width: 6px !important;
-  height: 6px !important;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -43,6 +57,22 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Animation pour les messages */
+.message-animation {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {

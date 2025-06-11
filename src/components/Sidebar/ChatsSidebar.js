@@ -230,25 +230,36 @@ function createChatItem(chat) {
       class: [
         "flex",
         "items-center",
-        "px-4",
-        "py-3",
+        "p-3",
         "hover:bg-[#f5f6f6]",
         "cursor-pointer",
-        isActive ? "bg-[#f0f2f5]" : "", // Ajout classe active
+        "transition-all",
+        isActive ? "bg-[#f0f2f5]" : "",
+        "border-b",
+        "border-[#e9edef]",
       ],
-      onclick: () => loadMessages(chat.id),
     },
     [
-      // Avatar
-      createElement("div", {
-        class: [
-          "w-12",
-          "h-12",
-          "rounded-full",
-          "bg-[#dfe5e7]",
-          "flex-shrink-0",
-        ],
-      }),
+      createElement(
+        "div",
+        {
+          class: [
+            "w-12",
+            "h-12",
+            "rounded-full",
+            "bg-gradient-to-br",
+            "from-[#00a884]",
+            "to-[#008069]",
+            "flex",
+            "items-center",
+            "justify-center",
+            "text-white",
+            "font-medium",
+            "text-lg",
+          ],
+        },
+        chat.name.charAt(0)
+      ),
       // Info container
       createElement(
         "div",
