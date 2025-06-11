@@ -103,7 +103,7 @@ export function createRegisterPage() {
           notification.remove();
                   router.navigate("/login");
 
-        }, 2000);
+        }, 1000);
 
       },
     },

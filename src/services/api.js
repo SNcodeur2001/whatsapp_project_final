@@ -66,6 +66,8 @@ async function login(phoneNumber) {
       // Sauvegarde dans localStorage
       localStorage.setItem("currentUser", JSON.stringify(user));
       store.setState({ currentUser: user });
+            await initializeData();  // 👈 Ajout ici
+
       console.log("User logged in:", user);
       return user;
     }
@@ -132,12 +134,14 @@ export async function register(nom, phone) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      id: Date.now(),
       nom,
       phone,
-      avatar: null, // Par défaut, pas d'avatar
-      status: "Hey there! I am using WhatsApp", // Message par défaut
-      lastSeen: new Date().toISOString(), // Dernière connexion actuelle
-      isOnline: true // Par défaut, l'utilisateur est en ligne
+      avatar: null, 
+      status: "Hey there! I am using WhatsApp", 
+      lastSeen: new Date().toISOString(), 
+      isOnline: true, 
+      contacts: [], 
     }),
   });
 

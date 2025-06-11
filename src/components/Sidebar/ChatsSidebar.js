@@ -18,9 +18,36 @@ export function createChatsSidebar() {
     const chatsList = createElement("div", {
       class: ["flex-1", "overflow-y-auto"],
     });
- 
 
-    store.state.chats.forEach((chat) => {
+    // Check if user is logged in first
+    if (!store.state.currentUser) {
+      console.log("No user logged in");
+      return chatsList;
+    }
+
+    // Récupérer les contacts de l'utilisateur connecté
+    const userContacts = store.state.currentUser.contacts || [];
+
+    // Filtrer les chats
+    const filteredChats = store.state.chats.filter((chat) => {
+      if (chat.type === "group") {
+        return chat.participants.includes(store.state.currentUser.id);
+      } else {
+        return chat.participants.some(
+          (participantId) =>
+            userContacts.includes(participantId) ||
+            participantId === store.state.currentUser.id
+        );
+      }
+    });
+
+    console.log("Chats filtrés:", {
+      userContacts,
+      filteredChats,
+    });
+
+    // Afficher uniquement les chats filtrés
+    filteredChats.forEach((chat) => {
       const chatItem = createChatItem(chat);
       chatItem.addEventListener("click", () => loadMessages(chat.id));
       chatsList.appendChild(chatItem);
@@ -257,13 +284,3 @@ function createChatItem(chat) {
   );
 }
 
-// async function fetchUsers() {
-//   const response = await fetch("http://localhost:3000/users");
-//   const data = await response.json();
-
-//   // Convertir les IDs en nombres
-//   return data.map((user) => ({
-//     ...user,
-//     id: Number(user.id), // Force la conversion en nombre
-//   }));
-// }

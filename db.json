@@ -7,7 +7,8 @@
       "avatar": null,
       "status": "Hey there! I am using WhatsApp",
       "lastSeen": "2024-06-04T12:30:00Z",
-      "isOnline": true
+      "isOnline": true,
+      "contacts": [2]
     },
     {
       "id": 2,
