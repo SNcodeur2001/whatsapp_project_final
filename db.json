@@ -1,109 +1,109 @@
-// {
-//   "users": [
-//     {
-//       "id": 1,
-//       "name": "John Doe",
-//       "phone": "+221777669595",
-//       "avatar": null,
-//       "status": "Hey there! I am using WhatsApp",
-//       "lastSeen": "2024-06-04T12:30:00Z",
-//       "isOnline": true
-//     },
-//     {
-//       "id": 2,
-//       "name": "Jane Smith",
-//       "phone": "+221776543210",
-//       "avatar": null,
-//       "status": "Busy",
-//       "lastSeen": "2024-06-04T10:15:00Z",
-//       "isOnline": false
-//     }
-//   ],
-//   "chats": [
-//     {
-//       "id": 1,
-//       "type": "individual",
-//       "participants": [1, 2],
-//       "name": "John Doe Ndiaye",
-//       "avatar": null,
-//       "createdAt": "2024-06-01T08:00:00Z",
-//       "lastMessage": {
-//         "messageId": 123,
-//         "content": "Il reste l'adaptateur au niveau de la...",
-//         "timestamp": "2024-06-04T17:26:00Z",
-//         "senderId": 1
-//       },
-//       "unreadCount": 2,
-//       "pinned": false,
-//       "archived": false
-//     },
-//     {
-//       "id": 2,
-//       "type": "group",
-//       "participants": [1, 2, 3, 4],
-//       "name": "Promo 2025 ECSA",
-//       "avatar": null,
-//       "createdAt": "2024-05-15T10:00:00Z",
-//       "lastMessage": {
-//         "messageId": 456,
-//         "content": "Clôture de la fête de la Tabaski...",
-//         "timestamp": "2024-06-04T20:06:00Z",
-//         "senderId": 2,
-//         "reactions": [
-//           {
-//             "userId": 1,
-//             "emoji": "👍"
-//           }
-//         ]
-//       },
-//       "unreadCount": 0,
-//       "pinned": true,
-//       "archived": false
-//     }
-//   ],
-//   "messages": [
-//     {
-//       "id": 123,
-//       "chatId": 1,
-//       "senderId": 1,
-//       "type": "text",
-//       "content": "Il reste l'adaptateur au niveau de la configuration réseau",
-//       "timestamp": "2024-06-04T17:26:00Z",
-//       "status": "read",
-//       "reactions": [],
-//       "replyTo": null,
-//       "forwarded": false
-//     },
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "phone": "+221777669595",
+      "avatar": null,
+      "status": "Hey there! I am using WhatsApp",
+      "lastSeen": "2024-06-04T12:30:00Z",
+      "isOnline": true
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "phone": "+221776543210",
+      "avatar": null,
+      "status": "Busy",
+      "lastSeen": "2024-06-04T10:15:00Z",
+      "isOnline": false
+    }
+  ],
+  "chats": [
+    {
+      "id": 1,
+      "type": "individual",
+      "participants": [1, 2],
+      "name": "John Doe Ndiaye",
+      "avatar": null,
+      "createdAt": "2024-06-01T08:00:00Z",
+      "lastMessage": {
+        "messageId": 123,
+        "content": "Il reste l'adaptateur au niveau de la...",
+        "timestamp": "2024-06-04T17:26:00Z",
+        "senderId": 1
+      },
+      "unreadCount": 2,
+      "pinned": false,
+      "archived": false
+    },
+    {
+      "id": 2,
+      "type": "group",
+      "participants": [1, 2, 3, 4],
+      "name": "Promo 2025 ECSA",
+      "avatar": null,
+      "createdAt": "2024-05-15T10:00:00Z",
+      "lastMessage": {
+        "messageId": 456,
+        "content": "Clôture de la fête de la Tabaski...",
+        "timestamp": "2024-06-04T20:06:00Z",
+        "senderId": 2,
+        "reactions": [
+          {
+            "userId": 1,
+            "emoji": "👍"
+          }
+        ]
+      },
+      "unreadCount": 0,
+      "pinned": true,
+      "archived": false
+    }
+  ],
+  "messages": [
+    {
+      "id": 123,
+      "chatId": 1,
+      "senderId": 1,
+      "type": "text",
+      "content": "Il reste l'adaptateur au niveau de la configuration réseau",
+      "timestamp": "2024-06-04T17:26:00Z",
+      "status": "read",
+      "reactions": [],
+      "replyTo": null,
+      "forwarded": false
+    },
 
-//     {
-//       "id": 126,
-//       "chatId": 1,
-//       "senderId": 2,
-//       "type": "text",
-//       "content": "Hello",
-//       "timestamp": "2024-06-04T17:26:00Z",
-//       "status": "read",
-//       "reactions": [],
-//       "replyTo": null,
-//       "forwarded": false
-//     },
+    {
+      "id": 126,
+      "chatId": 1,
+      "senderId": 2,
+      "type": "text",
+      "content": "Hello",
+      "timestamp": "2024-06-04T17:26:00Z",
+      "status": "read",
+      "reactions": [],
+      "replyTo": null,
+      "forwarded": false
+    },
 
-//     {
-//       "id": 456,
-//       "chatId": 2,
-//       "senderId": 2,
-//       "type": "text",
-//       "content": "Clôture de la fête de la Tabaski",
-//       "timestamp": "2024-06-04T20:06:00Z",
-//       "status": "delivered",
-//       "reactions": [
-//         {
-//           "userId": 1,
-//           "emoji": "👍"
-//         }
-//       ],
-//       "replyTo": null,
-//       "forwarded": false
-//     }
-//   ]
-// }
+    {
+      "id": 456,
+      "chatId": 2,
+      "senderId": 2,
+      "type": "text",
+      "content": "Clôture de la fête de la Tabaski",
+      "timestamp": "2024-06-04T20:06:00Z",
+      "status": "delivered",
+      "reactions": [
+        {
+          "userId": 1,
+          "emoji": "👍"
+        }
+      ],
+      "replyTo": null,
+      "forwarded": false
+    }
+  ]
+}

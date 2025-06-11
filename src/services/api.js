@@ -125,12 +125,26 @@ export async function loadMessages(chatId) {
 }
 
 
-export async function register(nom,phone){
+export async function register(nom, phone) {
   const response = await fetch(API_ENDPOINTS.USERS, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ nom, phone }),
+    body: JSON.stringify({
+      nom,
+      phone,
+      avatar: null, // Par défaut, pas d'avatar
+      status: "Hey there! I am using WhatsApp", // Message par défaut
+      lastSeen: new Date().toISOString(), // Dernière connexion actuelle
+      isOnline: true // Par défaut, l'utilisateur est en ligne
+    }),
   });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de l'inscription");
+  }
+
+  const data = await response.json();
+  console.log("Utilisateur inscrit :", data);
 }

@@ -35,6 +35,7 @@ export function createLoginPage() {
       // Sélecteur de pays avec indicatif
       createElement(
         "div",
+        
         {
           class: ["w-[120px]"],
         },
@@ -205,7 +206,35 @@ export function createLoginPage() {
       // Tentative de connexion avec le numéro complet
       await api.login(fullPhoneNumber);
       console.log("État après connexion:", store.state);
-      router.navigate("/chat");
+       const notification = createElement(
+          "div",
+          {
+            class: [
+              "absolute",
+              "top-4",
+              "right-4",
+              "bg-green-500",
+              "text-white",
+              "p-3",
+              "rounded-md",
+              "shadow-lg",
+              "font-bold",
+              "animate-fade-in",
+            ],
+          },
+          "Connexion réussie ✅"
+        );
+
+        // Ajouter la notification à la page
+        document.body.appendChild(notification);
+
+        // Supprimer la notification après 3 secondes
+        setTimeout(() => {
+          notification.remove();
+                  router.navigate("/chat");
+
+        }, 2000);
+      // router.navigate("/chat");
     } catch (error) {
       errorMessage.textContent = "Numéro de téléphone invalide";
       errorMessage.classList.remove("hidden");
