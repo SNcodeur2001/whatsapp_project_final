@@ -4,7 +4,6 @@ import { createCountrySelect } from "../components/CountrySelect";
 import { api } from "../services/api";
 import { router } from "../utils/router";
 import { store } from "../store/store";
-import { createRegisterPage } from "./register";
 
 export function createLoginPage() {
   const container = createElement("div", {

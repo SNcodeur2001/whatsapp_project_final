@@ -68,9 +68,28 @@ export function createRegisterPage() {
     router.navigate("/login");
   }
   }, "S'inscrire");
+  const returnButton = createElement("button", {
+  class: [
+    "mt-4",
+    "bg-green-600",
+    "text-white",
+    "p-2",
+    "rounded-md",
+    "font-bold",
+    "cursor-pointer",
+    "hover:bg-green-700"
+  ],
+  onClick: () => {
+    router.navigate("/login");
+  }
+}, "Retour à la connexion");
+
+// Ajout du bouton de retour sous le formulaire
+
+
 
   form.addNode(inputName).addNode(inputPhone).addNode(submitButton);
-  container.addNode(logo).addNode(title).addNode(form);
+  container.addNode(logo).addNode(title).addNode(form).addNode(returnButton);
 
   return container;
 }
