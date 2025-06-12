@@ -1,19 +1,53 @@
 import { createElement } from "../../component";
 import { store } from "../../store/store";
 import { loadMessages, addContact } from "../../services/api";
+import { createAddContactForm } from '../Contact/AddContactForm';
 
 export function createChatsSidebar() {
-  const sidebar = createElement("div", {
+  let showingContactForm = false;
+
+  const sidebar = createElement('div', {
     class: [
-      "w-[400px]",
-      "bg-white",
-      "flex",
-      "flex-col",
-      "border-r",
-      "border-[#d1d7db]",
-      "relative", // Ajout pour le positionnement du bouton
-    ],
+      'w-[400px]',
+      'bg-white',
+      'flex',
+      'flex-col',
+      'border-r',
+      'border-[#d1d7db]',
+      'relative'
+    ]
   });
+
+  function toggleContactForm() {
+    showingContactForm = !showingContactForm;
+    updateSidebar();
+  }
+
+  function createAddContactButton() {
+    return createElement('button', {
+      class: [
+        'fixed',
+        'bottom-4',
+        'left-[21%]',
+        'bg-[#00a884]',
+        'text-white',
+        'rounded-full',
+        'w-12',
+        'h-12',
+        'flex',
+        'items-center',
+        'justify-center',
+        'shadow-lg',
+        'hover:bg-[#008069]',
+        'z-10'
+      ],
+      onclick: toggleContactForm // Now accessible
+    }, [
+      createElement('i', {
+        class: ['fas', 'fa-user-plus']
+      })
+    ]);
+  }
 
   function renderChats() {
     const chatsList = createElement("div", {
@@ -58,14 +92,18 @@ export function createChatsSidebar() {
   }
 
   function updateSidebar() {
-    sidebar.innerHTML = "";
-    sidebar.append(
-      createHeader(),
-      createSearchSection(),
-      createArchivedSection(),
-      renderChats(),
-      createAddContactButton() // 👈 Ajout du bouton ici
-    );
+    sidebar.innerHTML = '';
+    if (showingContactForm) {
+      sidebar.appendChild(createAddContactForm(() => toggleContactForm()));
+    } else {
+      sidebar.append(
+        createHeader(),
+        createSearchSection(),
+        createArchivedSection(),
+        renderChats(),
+        createAddContactButton()
+      );
+    }
   }
 
   store.subscribe(updateSidebar);
@@ -225,6 +263,21 @@ function createArchivedSection() {
 
 function createChatItem(chat) {
   const isActive = chat.id === store.state.currentChat;
+  const currentUserId = store.state.currentUser.id;
+  let displayName;
+
+  if (chat.type === "group") {
+    displayName = chat.name;
+  } else {
+    // Trouver l'autre participant
+    const otherParticipantId = chat.participants.find(
+      (id) => id !== currentUserId
+    );
+    const otherParticipant = store.state.users.find(
+      (u) => u.id === otherParticipantId
+    );
+    displayName = otherParticipant ? otherParticipant.name : "Utilisateur inconnu";
+  }
 
   return createElement(
     "div",
@@ -260,7 +313,7 @@ function createChatItem(chat) {
             "text-lg",
           ],
         },
-        chat.name.charAt(0)
+        displayName.charAt(0)
       ),
       // Info container
       createElement(
@@ -280,7 +333,7 @@ function createChatItem(chat) {
                 {
                   class: ["font-medium", "text-[#111b21]"],
                 },
-                chat.name || "Sans nom"
+                displayName || "Sans nom"
               ),
               createElement(
                 "span",
@@ -293,42 +346,6 @@ function createChatItem(chat) {
           ),
         ]
       ),
-    ]
-  );
-}
-
-function createAddContactButton() {
-  return createElement(
-    "button",
-    {
-      class: [
-        "fixed",
-        "bottom-4",
-        "right-4",
-        "bg-[#00a884]",
-        "text-white",
-        "rounded-full",
-        "w-12",
-        "h-12",
-        "flex",
-        "items-center",
-        "justify-center",
-        "shadow-lg",
-        "hover:bg-[#008069]",
-      ],
-      onclick: () => {
-        const phone = prompt("Entrez le numéro de téléphone du contact :");
-        if (phone) {
-          addContact(phone).catch((error) => {
-            alert("Erreur : " + error.message);
-          });
-        }
-      },
-    },
-    [
-      createElement("i", {
-        class: ["fas", "fa-user-plus"],
-      }),
     ]
   );
 }
