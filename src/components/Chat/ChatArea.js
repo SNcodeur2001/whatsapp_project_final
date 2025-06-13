@@ -2,6 +2,7 @@ import { createElement } from "../../component";
 import { store } from "../../store/store";
 import { createChatHeader } from "./ChatHeader";
 import { createMessageInput } from "./MessageInput";
+import { startMessagePolling, stopMessagePolling } from "../../services/api";
 
 export function createChatArea() {
   const chatArea = createElement("div", {
@@ -41,7 +42,11 @@ export function createChatArea() {
         renderMessages(),
         createMessageInput()
       );
+
+      // Start polling when chat is selected
+      startMessagePolling();
     } else {
+      stopMessagePolling(); // Stop polling when no chat is selected
       chatArea.append(
         createElement(
           "div",
@@ -59,6 +64,9 @@ export function createChatArea() {
       );
     }
   }
+
+  // Cleanup on unmount (if needed)
+  window.addEventListener("beforeunload", stopMessagePolling);
 
   store.subscribe(updateChatArea);
   updateChatArea();

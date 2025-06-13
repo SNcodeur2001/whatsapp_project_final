@@ -201,15 +201,43 @@ export async function sendMessage(chatId, content) {
   }
 }
 
-export function startMessagePolling(chatId) {
-  return setInterval(async () => {
-    const response = await fetch(`${API_ENDPOINTS.MESSAGES}?chatId=${chatId}&_sort=timestamp&_order=desc`);
-    const messages = await response.json();
-    
-    if (messages.length !== store.state.messages.length) {
-      store.setState({ messages });
+let messagePollingInterval;
+
+export function startMessagePolling() {
+  // Clear any existing interval
+  if (messagePollingInterval) {
+    clearInterval(messagePollingInterval);
+  }
+
+  messagePollingInterval = setInterval(async () => {
+    try {
+      if (store.state.currentChat) {
+        const response = await fetch(`${API_ENDPOINTS.MESSAGES}`);
+        const allMessages = await response.json();
+        
+        // Filter messages for current chat
+        const chatMessages = allMessages.filter(
+          message => normalizeId(message.chatId) === normalizeId(store.state.currentChat)
+        );
+
+        // Only update if messages have changed
+        if (JSON.stringify(chatMessages) !== JSON.stringify(store.state.messages)) {
+          store.setState({ messages: chatMessages });
+          console.log('Messages updated:', chatMessages.length);
+        }
+      }
+    } catch (error) {
+      console.error('Error polling messages:', error);
     }
-  }, 3000); // Check every 3 seconds
+  }, 3000); // Poll every second
+
+  return () => clearInterval(messagePollingInterval);
+}
+
+export function stopMessagePolling() {
+  if (messagePollingInterval) {
+    clearInterval(messagePollingInterval);
+  }
 }
 
 export async function addContact(contactPhone) {

@@ -4,6 +4,25 @@ import { store } from "../../store/store";
 export function createChatHeader(currentChat) {
   if (!currentChat) return null;
 
+  // Déterminer le nom à afficher
+  let displayName;
+  if (currentChat.type === "group") {
+    displayName = currentChat.name;
+  } else {
+    // Pour les chats individuels, trouver l'autre participant
+    const currentUserId = store.state.currentUser.id;
+    const otherParticipantId = currentChat.participants.find(
+      id => id !== currentUserId
+    );
+    
+    // Trouver l'utilisateur correspondant
+    const otherParticipant = store.state.users.find(
+      user => user.id === otherParticipantId
+    );
+    
+    displayName = otherParticipant ? otherParticipant.name : "Utilisateur inconnu";
+  }
+
   return createElement(
     "div",
     {
@@ -33,7 +52,7 @@ export function createChatHeader(currentChat) {
             {
               class: ["text-[#111b21]", "font-medium"],
             },
-            currentChat.name
+            displayName
           ),
         ]
       ),
