@@ -3,10 +3,14 @@ import { store } from "../../store/store";
 import { loadMessages, addContact } from "../../services/api";
 import { createAddContactForm } from '../Contact/AddContactForm';
 import { toggleChatArchive } from "../../services/api";
+import { createGroupForm } from '../Group/CreateGroupForm';
 
 export function createChatsSidebar() {
+  // Declare state variables
   let showingContactForm = false;
+  let showingGroupForm = false;
 
+  // Create sidebar element
   const sidebar = createElement('div', {
     class: [
       'w-[400px]',
@@ -19,9 +23,65 @@ export function createChatsSidebar() {
     ]
   });
 
+  // Toggle functions
+  function toggleGroupForm() {
+    showingGroupForm = !showingGroupForm;
+    showingContactForm = false;
+    updateSidebar();
+  }
+
   function toggleContactForm() {
     showingContactForm = !showingContactForm;
+    showingGroupForm = false;
     updateSidebar();
+  }
+
+  // Move createHeader inside createChatsSidebar
+  function createHeader() {
+    return createElement(
+      "div",
+      {
+        class: ["bg-[#f0f2f5]", "pt-2", "pb-1"],
+      },
+      [
+        createElement(
+          "div",
+          {
+            class: ["px-4", "flex", "justify-between", "items-center", "mb-3"],
+          },
+          [
+            createElement(
+              "h1",
+              {
+                class: ["text-xl", "text-[#111b21]"],
+              },
+              "Chats"
+            ),
+            createElement(
+              "div",
+              {
+                class: ["flex", "gap-5", "text-[#54656f]"],
+              },
+              [
+                createElement('button', {
+                  class: ['cursor-pointer', 'hover:text-[#00a884]'],
+                  onclick: () => toggleGroupForm() // Call through closure
+                }, [
+                  createElement('i', {
+                    class: ['fas', 'fa-users-gear']
+                  })
+                ]),
+                createElement("span", {
+                  class: ["cursor-pointer", "fas", "fa-images"],
+                }),
+                createElement("span", { class: ["cursor-pointer"] }, "⋮"),
+              ]
+            ),
+          ]
+        ),
+        createFilterTabs(),
+      ]
+    );
   }
 
   function createAddContactButton() {
@@ -122,6 +182,8 @@ export function createChatsSidebar() {
     sidebar.innerHTML = '';
     if (showingContactForm) {
       sidebar.appendChild(createAddContactForm(() => toggleContactForm()));
+    } else if (showingGroupForm) {
+      sidebar.appendChild(createGroupForm(() => toggleGroupForm()));
     } else {
       sidebar.append(
         createHeader(),
@@ -133,64 +195,14 @@ export function createChatsSidebar() {
     }
   }
 
+  // Initialize sidebar
   store.subscribe(updateSidebar);
   updateSidebar();
 
   return sidebar;
 }
 
-function createHeader() {
-  return createElement(
-    "div",
-    {
-      class: ["bg-[#f0f2f5]", "pt-2", "pb-1"],
-    },
-    [
-      createElement(
-        "div",
-        {
-          class: ["px-4", "flex", "justify-between", "items-center", "mb-3"],
-        },
-        [
-          createElement(
-            "h1",
-            {
-              class: ["text-xl", "text-[#111b21]"],
-            },
-            "Chats"
-          ),
-          createElement(
-            "div",
-            {
-              class: ["flex", "gap-5", "text-[#54656f]"],
-            },
-            [
-              // Ajout du bouton de création de groupe
-              createElement('button', {
-                class: ['cursor-pointer', 'hover:text-[#00a884]'],
-                onclick: () => {
-                  showingContactForm = false;
-                  showingGroupForm = true;
-                  updateSidebar();
-                }
-              }, [
-                createElement('i', {
-                  class: ['fas', 'fa-users-gear']
-                })
-              ]),
-              createElement("span", {
-                class: ["cursor-pointer", "fas", "fa-images"],
-              }),
-              createElement("span", { class: ["cursor-pointer"] }, "⋮"),
-            ]
-          ),
-        ]
-      ),
-      createFilterTabs(),
-    ]
-  );
-}
-
+// Move helper functions that don't need access to state outside
 function createFilterTabs() {
   const filters = [
     { id: 'all', name: 'Tous', icon: 'fa-comments' },
