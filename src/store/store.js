@@ -6,6 +6,10 @@ class Store {
       currentChat: null,
       messages: [],
       currentUser: null,
+      filters: {
+        activeFilter: 'all', // 'all', 'unread', 'groups', 'archived'
+        searchQuery: ''
+      }
     };
     this.listeners = new Set();
   }

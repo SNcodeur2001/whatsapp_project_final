@@ -299,3 +299,31 @@ export async function addContact(contactPhone) {
     throw error;
   }
 }
+
+export async function toggleChatArchive(chatId) {
+  try {
+    const chat = store.state.chats.find(c => c.id === chatId);
+    if (!chat) return;
+
+    const response = await fetch(`${API_ENDPOINTS.CHATS}/${chatId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        archived: !chat.archived
+      })
+    });
+
+    const updatedChat = await response.json();
+    
+    // Mettre à jour le store
+    store.setState({
+      chats: store.state.chats.map(c => 
+        c.id === chatId ? updatedChat : c
+      )
+    });
+
+    return updatedChat;
+  } catch (error) {
+    console.error('Error toggling archive:', error);
+  }
+}
