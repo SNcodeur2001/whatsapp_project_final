@@ -58,29 +58,12 @@ export function createChatsSidebar() {
     if (!store.state.currentUser) return chatsList;
 
     const userContacts = store.state.currentUser.contacts || [];
-    let filteredChats = store.state.chats.filter(chat => {
-      // Filtre de base pour les contacts
-      const isContactChat = chat.participants.some(
-        participantId => userContacts.includes(participantId) || 
-        participantId === store.state.currentUser.id
-      );
+    let filteredChats = store.state.chats;
 
-      // Appliquer les filtres actifs
-      switch (store.state.filters.activeFilter) {
-        case 'unread':
-          return isContactChat && chat.unreadCount > 0;
-        case 'groups':
-          return chat.type === 'group';
-        case 'archived':
-          return chat.archived;
-        default:
-          return isContactChat && !chat.archived;
-      }
-    });
-
-    // Appliquer la recherche
-    if (store.state.filters.searchQuery) {
-      const query = store.state.filters.searchQuery.toLowerCase();
+    // Appliquer d'abord la recherche
+    const searchQuery = store.state.filters.searchQuery;
+    if (searchQuery && searchQuery.trim() !== '') {
+      const query = searchQuery.toLowerCase().trim();
       filteredChats = filteredChats.filter(chat => {
         if (chat.type === 'group') {
           return chat.name.toLowerCase().includes(query);
@@ -94,6 +77,25 @@ export function createChatsSidebar() {
         }
       });
     }
+
+    // Ensuite appliquer les autres filtres
+    filteredChats = filteredChats.filter(chat => {
+      const isContactChat = chat.participants.some(
+        participantId => userContacts.includes(participantId) || 
+        participantId === store.state.currentUser.id
+      );
+
+      switch (store.state.filters.activeFilter) {
+        case 'unread':
+          return isContactChat && chat.unreadCount > 0;
+        case 'groups':
+          return chat.type === 'group';
+        case 'archived':
+          return chat.archived;
+        default:
+          return isContactChat && !chat.archived;
+      }
+    });
 
     // Trier les chats
     filteredChats.sort((a, b) => {
@@ -163,6 +165,19 @@ function createHeader() {
               class: ["flex", "gap-5", "text-[#54656f]"],
             },
             [
+              // Ajout du bouton de création de groupe
+              createElement('button', {
+                class: ['cursor-pointer', 'hover:text-[#00a884]'],
+                onclick: () => {
+                  showingContactForm = false;
+                  showingGroupForm = true;
+                  updateSidebar();
+                }
+              }, [
+                createElement('i', {
+                  class: ['fas', 'fa-users-gear']
+                })
+              ]),
               createElement("span", {
                 class: ["cursor-pointer", "fas", "fa-images"],
               }),
@@ -226,46 +241,64 @@ function createFilterButton({ id, name, icon, active, onClick }) {
 }
 
 function createSearchSection() {
+  let inputValue = store.state.filters?.searchQuery || '';
+
   const input = createElement('input', {
     type: 'text',
     placeholder: 'Rechercher une discussion',
+    value: inputValue,
     class: [
-      'bg-transparent',
       'w-full',
       'text-sm',
       'focus:outline-none',
-      'placeholder-[#54656f]'
+      'text-[#111b21]',
+      'placeholder-[#54656f]',
+      'bg-transparent'
     ],
     oninput: (e) => {
-      store.setState({
-        filters: {
-          ...store.state.filters,
-          searchQuery: e.target.value
-        }
+      // Update value without losing focus
+      const newValue = e.target.value;
+      
+      // Update store without triggering a full re-render
+      requestAnimationFrame(() => {
+        store.setState({
+          filters: {
+            ...store.state.filters,
+            searchQuery: newValue
+          }
+        });
       });
+    },
+    // Remove onblur to keep focus
+    onclick: (e) => {
+      e.stopPropagation(); // Prevent sidebar clicks from removing focus
     }
   });
 
-  return createElement('div', {
-    class: ['px-3', 'py-2', 'bg-white']
+  const searchContainer = createElement('div', {
+    class: ['px-3', 'py-2', 'bg-white'],
+    onclick: (e) => e.stopPropagation() // Prevent click bubbling
+  });
+
+  const searchBox = createElement('div', {
+    class: [
+      'bg-[#f0f2f5]',
+      'flex',
+      'items-center',
+      'gap-4',
+      'px-4',
+      'rounded-lg',
+      'h-[35px]'
+    ]
   }, [
-    createElement('div', {
-      class: [
-        'bg-[#f0f2f5]',
-        'flex',
-        'items-center',
-        'gap-4',
-        'px-4',
-        'rounded-lg',
-        'h-[35px]'
-      ]
-    }, [
-      createElement('i', {
-        class: ['fas', 'fa-search', 'text-[#54656f]']
-      }),
-      input
-    ])
+    createElement('i', {
+      class: ['fas', 'fa-search', 'text-[#54656f]']
+    }),
+    input
   ]);
+
+  searchContainer.appendChild(searchBox);
+  return searchContainer;
 }
 
 function createArchivedSection() {

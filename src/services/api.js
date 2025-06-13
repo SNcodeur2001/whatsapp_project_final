@@ -327,3 +327,42 @@ export async function toggleChatArchive(chatId) {
     console.error('Error toggling archive:', error);
   }
 }
+
+export async function createGroup(groupName, participants) {
+  try {
+    const currentUser = store.state.currentUser;
+    const allParticipants = [currentUser.id, ...participants];
+
+    const newGroup = {
+      id: Date.now(),
+      type: 'group',
+      participants: allParticipants,
+      name: groupName,
+      avatar: null,
+      createdAt: new Date().toISOString(),
+      createdBy: currentUser.id,
+      lastMessage: null,
+      unreadCount: 0,
+      pinned: false,
+      archived: false
+    };
+
+    const response = await fetch(`${API_ENDPOINTS.CHATS}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newGroup)
+    });
+
+    const savedGroup = await response.json();
+    
+    // Mettre à jour la liste des chats
+    store.setState({
+      chats: [...store.state.chats, savedGroup]
+    });
+
+    return savedGroup;
+  } catch (error) {
+    console.error('Error creating group:', error);
+    throw error;
+  }
+}
