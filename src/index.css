@@ -83,3 +83,25 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
+/* Ajouter ces styles pour l'animation du bouton d'enregistrement */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Styles pour les messages audio */
+audio {
+  outline: none;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #f0f2f5;
+}

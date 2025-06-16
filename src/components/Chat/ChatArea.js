@@ -3,6 +3,7 @@ import { store } from "../../store/store";
 import { createChatHeader } from "./ChatHeader";
 import { createMessageInput } from "./MessageInput";
 import { startMessagePolling, stopMessagePolling } from "../../services/api";
+import { formatTime } from "../../utils/dateUtils";
 
 export function createChatArea() {
   const chatArea = createElement("div", {
@@ -74,64 +75,72 @@ export function createChatArea() {
   return chatArea;
 }
 
+// Ajouter cette fonction pour créer un message audio
+function createAudioMessage(message) {
+  const audioElement = createElement('audio', {
+    controls: true,
+    class: ['max-w-xs', 'rounded-lg']
+  });
+  
+  audioElement.src = message.content; // Le contenu base64
+  
+  return createElement('div', {
+    class: [
+      'flex',
+      'items-center',
+      'gap-2',
+      'bg-[#e9edef]',
+      'p-3',
+      'rounded-lg',
+      'max-w-xs'
+    ]
+  }, [
+    createElement('i', {
+      class: ['fas', 'fa-play', 'text-[#00a884]']
+    }),
+    audioElement
+  ]);
+}
+
+// Modifier la fonction createMessage pour gérer les messages audio
 function createMessage(message) {
-  // Guard clause for no currentUser
-  if (!store.state.currentUser) {
-    return null;
+  if (!message || !store.state.currentUser) return null;
+  
+  const isOwn = message.senderId === store.state.currentUser.id;
+  
+  let messageContent;
+  if (message.type === 'audio') {
+    messageContent = createAudioMessage(message);
+  } else {
+    messageContent = createElement('p', {
+      class: ['text-sm', 'break-words']
+    }, message.content || '');
   }
 
-  const isOwn = message.senderId === store.state.currentUser.id;
-
-  return createElement(
-    "div",
-    {
-      class: [
-        "flex",
-        isOwn ? "justify-end" : "justify-start",
-        "mb-2",
-        "message-animation",
-      ],
-    },
-    [
-      createElement(
-        "div",
-        {
-          class: [
-            "max-w-[65%]",
-            "px-4",
-            "py-2",
-            "rounded-lg",
-            isOwn ? "bg-[#dcf8c6]" : "bg-white",
-            "shadow-sm",
-            "hover:shadow-md",
-            "transition-all",
-          ],
-        },
-        [
-          createElement(
-            "p",
-            {
-              class: ["text-[#111b21]", "mb-1"],
-            },
-            message.content
-          ),
-          createElement(
-            "span",
-            {
-              class: [
-                "text-[11px]",
-                "text-[#667781]",
-                "block",
-                "text-right",
-              ],
-            },
-            new Date(message.timestamp).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          ),
-        ]
-      ),
+  return createElement('div', {
+    class: [
+      'flex',
+      'mb-4',
+      isOwn ? 'justify-end' : 'justify-start'
     ]
-  );
+  }, [
+    createElement('div', {
+      class: [
+        'max-w-xs',
+        'lg:max-w-md',
+        'px-4',
+        'py-2',
+        'rounded-lg',
+        isOwn 
+          ? 'bg-[#d9fdd3] text-[#111b21]' 
+          : 'bg-white text-[#111b21]',
+        'shadow-sm'
+      ]
+    }, [
+      messageContent,
+      createElement('div', {
+        class: ['text-xs', 'text-[#667781]', 'mt-1', 'text-right']
+      }, formatTime(message.timestamp))
+    ])
+  ]);
 }

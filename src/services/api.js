@@ -153,14 +153,15 @@ export async function register(nom, phone) {
   console.log("Utilisateur inscrit :", data);
 }
 
-export async function sendMessage(chatId, content) {
+export async function sendMessage(chatId, content, type = 'text') {
+  if (!chatId || !content) return;
+
   try {
     const newMessage = {
-      id: Date.now(),
       chatId: Number(chatId),
       senderId: store.state.currentUser.id,
-      type: "text",
-      content,
+      type: type,
+      content: content,
       timestamp: new Date().toISOString(),
       status: "sent",
       reactions: [],
@@ -168,36 +169,38 @@ export async function sendMessage(chatId, content) {
       forwarded: false
     };
 
-    const response = await fetch(`${API_ENDPOINTS.MESSAGES}`, {
+    // 1. Envoyer le message au serveur JSON Server
+    const response = await fetch(API_ENDPOINTS.MESSAGES, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(newMessage)
     });
 
+    if (!response.ok) {
+      throw new Error('Erreur lors de l\'envoi du message');
+    }
+
     const savedMessage = await response.json();
 
-    // Mise à jour du lastMessage du chat
-    await fetch(`${API_ENDPOINTS.CHATS}/${chatId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        lastMessage: {
-          messageId: savedMessage.id,
-          content: content,
-          timestamp: savedMessage.timestamp,
-          senderId: store.state.currentUser.id
-        }
-      })
-    });
+    // 2. Mettre à jour le store local avec le message sauvegardé
+    const updatedMessages = [...store.state.messages, savedMessage];
 
-    // Mettre à jour le store
+    // 3. Mettre à jour le lastMessage du chat
+    await updateChatLastMessage(chatId, savedMessage);
+
+    // 4. Mettre à jour le store
     store.setState({
-      messages: [...store.state.messages, savedMessage]
+      messages: updatedMessages
     });
 
+    console.log('Message envoyé et sauvegardé:', savedMessage);
     return savedMessage;
+
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Erreur lors de l\'envoi du message:', error);
+    throw error;
   }
 }
 
@@ -364,5 +367,82 @@ export async function createGroup(groupName, participants) {
   } catch (error) {
     console.error('Error creating group:', error);
     throw error;
+  }
+}
+
+// Ajouter cette fonction à votre fichier api.js existant
+
+export async function sendAudioMessage(chatId, audioBlob) {
+  if (!chatId || !audioBlob) return;
+
+  try {
+    // Convertir le blob en base64
+    const audioBase64 = await blobToBase64(audioBlob);
+    
+    // Utiliser la fonction sendMessage avec le type audio
+    return await sendMessage(chatId, audioBase64, 'audio');
+
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi du message audio:', error);
+    throw error;
+  }
+}
+
+// Fonction utilitaire pour convertir blob en base64
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Ajouter cette fonction pour mettre à jour le lastMessage du chat
+async function updateChatLastMessage(chatId, message) {
+  try {
+    // Trouver le chat à mettre à jour
+    const chat = store.state.chats.find(c => c.id === Number(chatId));
+    if (!chat) return;
+
+    // Préparer les données du lastMessage
+    const lastMessageData = {
+      messageId: message.id,
+      content: message.type === 'audio' ? '🎵 Message vocal' : message.content,
+      timestamp: message.timestamp,
+      senderId: message.senderId
+    };
+
+    // Mettre à jour le chat sur le serveur
+    const updatedChat = {
+      ...chat,
+      lastMessage: lastMessageData
+    };
+
+    const response = await fetch(`${API_ENDPOINTS.CHATS}/${chatId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedChat)
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la mise à jour du chat');
+    }
+
+    const savedChat = await response.json();
+
+    // Mettre à jour le store local
+    const updatedChats = store.state.chats.map(c => 
+      c.id === Number(chatId) ? savedChat : c
+    );
+
+    store.setState({
+      chats: updatedChats
+    });
+
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du lastMessage:', error);
   }
 }
