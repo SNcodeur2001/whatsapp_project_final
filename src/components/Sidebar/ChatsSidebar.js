@@ -12,7 +12,7 @@ export function createChatsSidebar() {
   let showingGroupForm = false;
   let showingSettings = false;
 
-  // Create sidebar element
+  // Create sidebar element with enhanced styling
   const sidebar = createElement('div', {
     class: [
       'w-[400px]',
@@ -20,8 +20,10 @@ export function createChatsSidebar() {
       'flex',
       'flex-col',
       'border-r',
-      'border-[#d1d7db]',
-      'relative'
+      'border-[#e9edef]',
+      'relative',
+      'h-screen',
+      'shadow-sm'
     ]
   });
 
@@ -48,45 +50,77 @@ export function createChatsSidebar() {
     updateSidebar();
   }
 
-  // Move createHeader inside createChatsSidebar
+  // Enhanced header with modern WhatsApp styling
   function createHeader() {
     return createElement(
       "div",
       {
-        class: ["bg-[#f0f2f5]", "pt-2", "pb-1"],
+        class: ["bg-[#f0f2f5]", "pt-5", "pb-3", "px-4", "border-b", "border-[#e9edef]"],
       },
       [
         createElement(
           "div",
           {
-            class: ["px-4", "flex", "justify-between", "items-center", "mb-3"],
+            class: ["flex", "justify-between", "items-center", "mb-4"],
           },
           [
             createElement(
               "h1",
               {
-                class: ["text-xl", "text-[#111b21]"],
+                class: ["text-2xl", "font-semibold", "text-[#111b21]"],
               },
               "Chats"
             ),
             createElement(
               "div",
               {
-                class: ["flex", "gap-5", "text-[#54656f]"],
+                class: ["flex", "gap-6", "text-[#54656f]"],
               },
               [
                 createElement('button', {
-                  class: ['cursor-pointer', 'hover:text-[#00a884]'],
-                  onclick: () => toggleGroupForm() // Call through closure
+                  class: [
+                    'p-2',
+                    'rounded-full',
+                    'hover:bg-[#e5e7eb]',
+                    'transition-all',
+                    'duration-200',
+                    'hover:text-[#00a884]',
+                    'active:scale-95'
+                  ],
+                  onclick: () => toggleGroupForm()
                 }, [
                   createElement('i', {
-                    class: ['fas', 'fa-users-gear']
+                    class: ['fas', 'fa-users-gear', 'text-lg']
                   })
                 ]),
-                createElement("span", {
-                  class: ["cursor-pointer", "fas", "fa-images"],
-                }),
-                createElement("span", { class: ["cursor-pointer"] }, "⋮"),
+                createElement("button", {
+                  class: [
+                    'p-2',
+                    'rounded-full',
+                    'hover:bg-[#e5e7eb]',
+                    'transition-all',
+                    'duration-200',
+                    'hover:text-[#00a884]',
+                    'active:scale-95'
+                  ],
+                }, [
+                  createElement('i', {
+                    class: ['fas', 'fa-images', 'text-lg']
+                  })
+                ]),
+                createElement("button", {
+                  class: [
+                    'p-2',
+                    'rounded-full',
+                    'hover:bg-[#e5e7eb]',
+                    'transition-all',
+                    'duration-200',
+                    'hover:text-[#00a884]',
+                    'active:scale-95',
+                    'text-xl',
+                    'font-bold'
+                  ],
+                }, "⋮"),
               ]
             ),
           ]
@@ -96,35 +130,42 @@ export function createChatsSidebar() {
     );
   }
 
+  // Enhanced floating action button
   function createAddContactButton() {
     return createElement('button', {
       class: [
         'fixed',
-        'bottom-4',
-        'left-[21%]',
+        'bottom-6',
+        'left-[400px]',
         'bg-[#00a884]',
         'text-white',
         'rounded-full',
-        'w-12',
-        'h-12',
+        'w-14',
+        'h-14',
         'flex',
         'items-center',
         'justify-center',
-        'shadow-lg',
+        'shadow-xl',
         'hover:bg-[#008069]',
-        'z-10'
+        'hover:shadow-2xl',
+        'active:scale-95',
+        'transition-all',
+        'duration-200',
+        'z-20',
+        'border-4',
+        'border-white'
       ],
-      onclick: toggleContactForm // Now accessible
+      onclick: toggleContactForm
     }, [
       createElement('i', {
-        class: ['fas', 'fa-user-plus']
+        class: ['fas', 'fa-user-plus', 'text-lg']
       })
     ]);
   }
 
   function renderChats() {
     const chatsList = createElement("div", {
-      class: ["flex-1", "overflow-y-auto"]
+      class: ["flex-1", "overflow-y-auto", "scrollbar-thin", "scrollbar-thumb-[#d1d7db]", "scrollbar-track-transparent"]
     });
 
     if (!store.state.currentUser) return chatsList;
@@ -220,7 +261,7 @@ export function createChatsSidebar() {
   };
 }
 
-// Move helper functions that don't need access to state outside
+// Enhanced filter tabs with modern styling
 function createFilterTabs() {
   const filters = [
     { id: 'all', name: 'Tous', icon: 'fa-comments' },
@@ -230,7 +271,7 @@ function createFilterTabs() {
   ];
 
   return createElement('div', {
-    class: ['flex', 'gap-2', 'px-4', 'overflow-x-auto', 'hide-scrollbar']
+    class: ['flex', 'gap-2', 'overflow-x-auto', 'hide-scrollbar', 'pb-1']
   }, filters.map(filter => createFilterButton({
     ...filter,
     active: store.state.filters.activeFilter === filter.id,
@@ -250,26 +291,34 @@ function createFilterButton({ id, name, icon, active, onClick }) {
     "button",
     {
       class: [
-        "px-3",
-        "py-1",
+        "px-4",
+        "py-2",
         "rounded-full",
         "text-sm",
+        "font-medium",
         "whitespace-nowrap",
+        "transition-all",
+        "duration-200",
+        "flex",
+        "items-center",
+        "gap-2",
+        "border",
         active
-          ? "bg-[#e9edef] text-[#111b21]"
-          : "text-[#54656f] hover:bg-[#e9edef]",
+          ? "bg-[#00a884] text-white border-[#00a884] shadow-sm"
+          : "text-[#54656f] hover:bg-[#f0f2f5] border-[#e9edef] hover:border-[#00a884] hover:text-[#00a884]",
       ],
       onclick: onClick,
     },
     [
       createElement("i", {
-        class: ["fas", icon, "mr-1"],
+        class: ["fas", icon, "text-xs"],
       }),
       name,
     ]
   );
 }
 
+// Enhanced search section
 function createSearchSection() {
   let inputValue = store.state.filters?.searchQuery || '';
 
@@ -282,14 +331,13 @@ function createSearchSection() {
       'text-sm',
       'focus:outline-none',
       'text-[#111b21]',
-      'placeholder-[#54656f]',
-      'bg-transparent'
+      'placeholder-[#8696a0]',
+      'bg-transparent',
+      'font-normal'
     ],
     oninput: (e) => {
-      // Update value without losing focus
       const newValue = e.target.value;
       
-      // Update store without triggering a full re-render
       requestAnimationFrame(() => {
         store.setState({
           filters: {
@@ -299,15 +347,14 @@ function createSearchSection() {
         });
       });
     },
-    // Remove onblur to keep focus
     onclick: (e) => {
-      e.stopPropagation(); // Prevent sidebar clicks from removing focus
+      e.stopPropagation();
     }
   });
 
   const searchContainer = createElement('div', {
-    class: ['px-3', 'py-2', 'bg-white'],
-    onclick: (e) => e.stopPropagation() // Prevent click bubbling
+    class: ['px-4', 'py-3', 'bg-white'],
+    onclick: (e) => e.stopPropagation()
   });
 
   const searchBox = createElement('div', {
@@ -317,12 +364,21 @@ function createSearchSection() {
       'items-center',
       'gap-4',
       'px-4',
+      'py-2',
       'rounded-lg',
-      'h-[35px]'
+      'h-[40px]',
+      'border',
+      'border-transparent',
+      'focus-within:border-[#00a884]',
+      'focus-within:bg-white',
+      'transition-all',
+      'duration-200',
+      'hover:bg-[#e9edef]',
+      'focus-within:shadow-sm'
     ]
   }, [
     createElement('i', {
-      class: ['fas', 'fa-search', 'text-[#54656f]']
+      class: ['fas', 'fa-search', 'text-[#8696a0]', 'text-sm']
     }),
     input
   ]);
@@ -331,6 +387,7 @@ function createSearchSection() {
   return searchContainer;
 }
 
+// Enhanced archived section
 function createArchivedSection() {
   return createElement(
     "div",
@@ -339,30 +396,67 @@ function createArchivedSection() {
         "flex",
         "items-center",
         "px-4",
-        "py-3",
-        "gap-3",
+        "py-4",
+        "gap-4",
         "hover:bg-[#f5f6f6]",
         "cursor-pointer",
         "border-b",
         "border-[#e9edef]",
+        "transition-all",
+        "duration-200",
+        "active:bg-[#e9edef]"
       ],
     },
     [
-      createElement("span", {
-        class: ["text-[#00a884]", "fas", "fa-archive"],
-      }),
-      createElement("span", { class: ["text-[#111b21]"] }, "Archived"),
+      createElement("div", {
+        class: [
+          "w-12",
+          "h-12",
+          "bg-[#00a884]",
+          "rounded-full",
+          "flex",
+          "items-center",
+          "justify-center",
+          "text-white"
+        ]
+      }, [
+        createElement("i", {
+          class: ["fas", "fa-archive", "text-lg"],
+        })
+      ]),
       createElement(
-        "span",
+        "div",
         {
-          class: ["ml-auto", "text-xs", "text-[#667781]"],
+          class: ["flex-1", "flex", "justify-between", "items-center"]
         },
-        "1"
+        [
+          createElement("span", { 
+            class: ["text-[#111b21]", "font-medium"] 
+          }, "Archived"),
+          createElement(
+            "span",
+            {
+              class: [
+                "bg-[#00a884]",
+                "text-white",
+                "text-xs",
+                "px-2",
+                "py-1",
+                "rounded-full",
+                "font-medium",
+                "min-w-[20px]",
+                "text-center"
+              ],
+            },
+            "1"
+          ),
+        ]
       ),
     ]
   );
 }
 
+// Enhanced chat item with modern WhatsApp styling
 function createChatItem(chat) {
   const isActive = chat.id === store.state.currentChat;
   const currentUserId = store.state.currentUser.id;
@@ -378,7 +472,7 @@ function createChatItem(chat) {
     displayName = otherParticipant ? otherParticipant.name : 'Sans nom';
   }
 
-  // Menu contextuel
+  // Enhanced context menu
   function showContextMenu(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -387,35 +481,53 @@ function createChatItem(chat) {
       class: [
         'absolute',
         'bg-white',
-        'shadow-lg',
-        'rounded-lg',
+        'shadow-2xl',
+        'rounded-xl',
         'py-2',
         'z-50',
-        'w-[180px]',  // Ajout d'une largeur fixe
-        'right-4',
-        'mt-2'
+        'w-[200px]',
+        'border',
+        'border-[#e9edef]',
+        'backdrop-blur-sm'
       ]
     }, [
       createElement('button', {
         class: [
           'w-full',
-          'px-3',  // Réduction du padding horizontal
-          'py-2',
+          'px-4',
+          'py-3',
           'text-left',
           'hover:bg-[#f0f2f5]',
           'flex',
           'items-center',
-          'gap-2',  // Réduction de l'espace entre l'icône et le texte
-          'text-sm'  // Texte plus petit
+          'gap-3',
+          'text-sm',
+          'font-medium',
+          'text-[#111b21]',
+          'transition-all',
+          'duration-150',
+          'active:bg-[#e9edef]'
         ],
         onclick: async () => {
           await toggleChatArchive(chat.id);
           menu.remove();
         }
       }, [
-        createElement('i', {
-          class: ['fas', chat.archived ? 'fa-inbox' : 'fa-archive']
-        }),
+        createElement('div', {
+          class: [
+            'w-8',
+            'h-8',
+            'rounded-full',
+            'bg-[#f0f2f5]',
+            'flex',
+            'items-center',
+            'justify-center'
+          ]
+        }, [
+          createElement('i', {
+            class: ['fas', chat.archived ? 'fa-inbox' : 'fa-archive', 'text-[#54656f]', 'text-sm']
+          })
+        ]),
         chat.archived ? 'Désarchiver' : 'Archiver'
       ])
     ]);
@@ -436,86 +548,181 @@ function createChatItem(chat) {
     document.body.appendChild(menu);
   }
 
+  // Generate avatar colors based on name
+  const avatarColors = [
+    'from-[#00a884] to-[#008069]',
+    'from-[#7c3aed] to-[#5b21b6]',
+    'from-[#dc2626] to-[#991b1b]',
+    'from-[#ea580c] to-[#c2410c]',
+    'from-[#0891b2] to-[#0e7490]',
+    'from-[#16a34a] to-[#15803d]',
+    'from-[#c026d3] to-[#a21caf]',
+    'from-[#2563eb] to-[#1d4ed8]'
+  ];
+  
+  const colorIndex = displayName.charCodeAt(0) % avatarColors.length;
+  const avatarGradient = avatarColors[colorIndex];
+
   return createElement('div', {
     class: [
       'flex',
       'items-center',
-      'p-3',
+      'px-4',
+      'py-3',
       'hover:bg-[#f5f6f6]',
       'cursor-pointer',
       'transition-all',
-      isActive ? 'bg-[#f0f2f5]' : '',
-      'border-b',
-      'border-[#e9edef]',
+      'duration-150',
+      isActive ? 'bg-[#e9edef] border-r-4 border-[#00a884]' : '',
       'relative',
-      'group'
+      'group',
+      'active:bg-[#e9edef]'
     ],
     onclick: () => loadMessages(chat.id),
     oncontextmenu: showContextMenu
   }, [
-    // Avatar
+    // Enhanced Avatar
     createElement('div', {
       class: [
         'w-12',
         'h-12',
         'rounded-full',
         'bg-gradient-to-br',
-        'from-[#00a884]',
-        'to-[#008069]',
+        avatarGradient,
         'flex',
         'items-center',
         'justify-center',
         'text-white',
-        'font-medium',
-        'text-lg'
+        'font-semibold',
+        'text-lg',
+        'shadow-sm',
+        'ring-2',
+        'ring-white',
+        'relative',
+        'overflow-hidden'
       ]
-    }, displayName.charAt(0)),
-    // Info container
+    }, [
+      displayName.charAt(0).toUpperCase(),
+      // Online indicator (could be conditional)
+      createElement('div', {
+        class: [
+          'absolute',
+          '-bottom-0.5',
+          '-right-0.5',
+          'w-3',
+          'h-3',
+          'bg-[#06d6a0]',
+          'rounded-full',
+          'border-2',
+          'border-white',
+          'hidden' // Show conditionally based on online status
+        ]
+      })
+    ]),
+    
+    // Enhanced Info container
     createElement(
       "div",
       {
-        class: ["ml-3", "flex-1", "min-w-0"],
+        class: ["ml-4", "flex-1", "min-w-0"],
       },
       [
         createElement(
           "div",
           {
-            class: ["flex", "justify-between"],
+            class: ["flex", "justify-between", "items-start", "mb-1"],
           },
           [
             createElement(
               "span",
               {
-                class: ["font-medium", "text-[#111b21]"],
+                class: [
+                  "font-medium", 
+                  "text-[#111b21]", 
+                  "truncate",
+                  "text-[15px]"
+                ],
               },
               displayName || "Sans nom"
             ),
             createElement(
               "span",
               {
-                class: ["text-xs", "text-[#667781]"],
+                class: ["text-xs", "text-[#667781]", "ml-2", "flex-shrink-0"],
               },
-              ""
+              "12:30" // Could be dynamic
             ),
+          ]
+        ),
+        createElement(
+          "div",
+          {
+            class: ["flex", "justify-between", "items-center"],
+          },
+          [
+            createElement(
+              "p",
+              {
+                class: [
+                  "text-sm", 
+                  "text-[#667781]", 
+                  "truncate",
+                  "flex-1",
+                  "mr-2"
+                ],
+              },
+              chat.lastMessage?.content || "Nouveau chat"
+            ),
+            // Unread badge
+            chat.unreadCount > 0 ? createElement(
+              "span",
+              {
+                class: [
+                  "bg-[#00a884]",
+                  "text-white",
+                  "text-xs",
+                  "px-2",
+                  "py-0.5",
+                  "rounded-full",
+                  "font-medium",
+                  "min-w-[20px]",
+                  "text-center",
+                  "flex-shrink-0"
+                ],
+              },
+              chat.unreadCount.toString()
+            ) : null,
           ]
         ),
       ]
     ),
+    
+    // Enhanced context menu button
     createElement('button', {
       class: [
         'absolute',
-        'right-2',
+        'right-4',
+        'top-1/2',
+        '-translate-y-1/2',
         'opacity-0',
         'group-hover:opacity-100',
-        'transition-opacity',
-        'text-[#54656f]'
+        'transition-all',
+        'duration-200',
+        'text-[#8696a0]',
+        'hover:text-[#54656f]',
+        'p-2',
+        'rounded-full',
+        'hover:bg-[#e9edef]',
+        'active:scale-95'
       ],
-      onclick: showContextMenu
+      onclick: (e) => {
+        e.stopPropagation();
+        showContextMenu(e);
+      }
     }, [
       createElement('i', {
-        class: ['fas', 'fa-ellipsis-v']
+        class: ['fas', 'fa-chevron-down', 'text-sm']
       })
     ])
-  ]);
+  ].filter(Boolean)); // Filter out null elements
 }
-

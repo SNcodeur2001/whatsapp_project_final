@@ -7,11 +7,16 @@ export function createChatItem(chat) {
       class: [
         "flex",
         "items-center",
-        "gap-3",
-        "px-3",
-        "py-3",
-        "hover:bg-[#f5f6f6]",
+        "gap-4",
+        "px-4",
+        "py-4",
+        "hover:bg-[#f0f2f5]",
         "cursor-pointer",
+        "transition-colors",
+        "duration-150",
+        "border-b",
+        "border-[#e9edef]",
+        "last:border-b-0",
       ],
     },
     [
@@ -20,33 +25,50 @@ export function createChatItem(chat) {
           "w-12",
           "h-12",
           "rounded-full",
-          "bg-[#dfe5e7]",
+          "bg-gradient-to-br",
+          "from-[#dfe5e7]",
+          "to-[#c6cbd3]",
           "flex-shrink-0",
+          "shadow-sm",
+          "border",
+          "border-[#e9edef]",
         ],
       }),
       createElement(
         "div",
         {
-          class: ["flex-1", "min-w-0"],
+          class: ["flex-1", "min-w-0", "overflow-hidden"],
         },
         [
           createElement(
             "div",
             {
-              class: ["flex", "justify-between", "items-center"],
+              class: ["flex", "justify-between", "items-baseline", "mb-1"],
             },
             [
               createElement(
                 "span",
                 {
-                  class: ["font-medium", "text-[#111b21]"],
+                  class: [
+                    "font-medium", 
+                    "text-[#111b21]", 
+                    "text-base",
+                    "leading-tight",
+                    "truncate",
+                    "pr-2"
+                  ],
                 },
                 chat.name
               ),
               createElement(
                 "span",
                 {
-                  class: ["text-xs", "text-[#667781]"],
+                  class: [
+                    "text-xs", 
+                    "text-[#667781]", 
+                    "flex-shrink-0",
+                    "font-normal"
+                  ],
                 },
                 chat.time
               ),
@@ -55,13 +77,19 @@ export function createChatItem(chat) {
           createElement(
             "div",
             {
-              class: ["flex", "justify-between", "items-center", "mt-1"],
+              class: ["flex", "justify-between", "items-center", "gap-2"],
             },
             [
               createElement(
                 "span",
                 {
-                  class: ["text-sm", "text-[#667781]", "truncate"],
+                  class: [
+                    "text-sm", 
+                    "text-[#667781]", 
+                    "truncate",
+                    "leading-relaxed",
+                    "flex-1"
+                  ],
                 },
                 chat.lastMessage
               ),
@@ -73,12 +101,16 @@ export function createChatItem(chat) {
                       "bg-[#25d366]",
                       "text-white",
                       "rounded-full",
-                      "w-[20px]",
+                      "min-w-[20px]",
                       "h-[20px]",
+                      "px-1.5",
                       "flex",
                       "items-center",
                       "justify-center",
                       "text-xs",
+                      "font-medium",
+                      "shadow-sm",
+                      "flex-shrink-0",
                     ],
                   },
                   chat.unread.toString()
