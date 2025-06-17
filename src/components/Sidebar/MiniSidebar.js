@@ -1,133 +1,201 @@
 import { createElement } from "../../component";
+import { store } from "../../store/store";
 
-export function createMiniSidebar() {
-  // console.log("je suis le sidebar");
+export function createMiniSidebar(onSettingsClick) {
+  const currentUser = store.state.currentUser;
+  const userInitial = currentUser?.name?.charAt(0)?.toUpperCase() || "?";
 
   return createElement(
     "div",
     {
       class: [
-        "w-[68px]",
-        "bg-[#e9edef]", // Changed to light theme color
+        "w-[75px]",
+        "bg-[#f0f2f5]",
         "flex",
         "flex-col",
-        "py-2",
-        "gap-4",
+        "py-4",
         "border-r",
-        "border-[#d1d7db]", // Added border
+        "border-[#e9edef]",
+        "shadow-sm",
       ],
     },
     [
-      // Messages icon with notification
-      createNavItem("chat", "fa-comments", true, "72"),
-      // Status icon with green dot
-      createElement(
-        "div",
-        {
-          class: ["relative"],
-        },
-        [
-          createNavItem("status", "fa-circle"),
-          createElement("div", {
-            class: [
-              "w-[6px]",
-              "h-[6px]",
-              "bg-[#00a884]",
-              "rounded-full",
-              "absolute",
-              "right-2",
-              "top-2",
-            ],
-          }),
-        ]
-      ),
-      // Communities icon
-      createNavItem("communities", "fa-users"),
-      // Channel icon
-      createNavItem("channels", "fa-broadcast-tower"),
-      // Settings at bottom
-      createElement(
-        "div",
-        {
-          class: ["mt-auto"],
-        },
-        [createNavItem("settings", "fa-cog")]
-      ),
-      // Profile picture at bottom
+      // Logo WhatsApp en haut
       createElement("div", {
         class: [
-          "w-[40px]",
-          "h-[40px]",
-          "rounded-full",
-          "bg-[#dfe5e7]", // Changed to light theme color
-          "cursor-pointer",
+          "w-10",
+          "h-10",
           "mx-auto",
-          "mt-2",
+          "mb-6",
+          "opacity-75",
+          "hover:opacity-100",
+          "transition-opacity",
         ],
+      },
+      [
+        createElement("img", {
+          src: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+          alt: "WhatsApp",
+          class: ["w-full", "h-full"],
+        }),
+      ]),
+
+      // Navigation Icons Container
+      createElement("div", {
+        class: ["flex", "flex-col", "gap-1"],
+      },
+      [
+        createNavButton("Discussions", "fa-comments", true, "72"),
+        createNavButton("Statut", "fa-circle", false, null, true),
+        createNavButton("Communautés", "fa-users"),
+        createNavButton("Chaînes", "fa-broadcast-tower"),
+      ]),
+
+      // Separator
+      createElement("div", {
+        class: ["h-[1px]", "bg-[#e9edef]", "mx-4", "my-4"],
       }),
+
+      // Settings and Profile Section
+      createElement("div", {
+        class: ["mt-auto", "flex", "flex-col", "gap-4"],
+      },
+      [
+        createNavButton("Paramètres", "fa-cog", false, null, false, onSettingsClick),
+        createElement("div", {
+          class: [
+            "w-[45px]",
+            "h-[45px]",
+            "rounded-full",
+            "bg-gradient-to-br",
+            "from-[#00a884]",
+            "to-[#008069]",
+            "flex",
+            "items-center",
+            "justify-center",
+            "text-white",
+            "font-medium",
+            "mx-auto",
+            "cursor-pointer",
+            "hover:shadow-md",
+            "transition-shadow",
+            "text-sm",
+          ],
+        }, userInitial),
+      ]),
     ]
   );
 }
 
-function createNavItem(
-  name,
-  iconClass,
-  isActive = false,
-  notificationCount = null
-) {
-  const navItem = createElement(
-    "div",
-    {
+function createNavButton(name, icon, isActive = false, badge = null, hasStatus = false, onClick = null) {
+  const button = createElement("div", {
+    class: [
+      "relative",
+      "group",
+      "px-4",
+      "py-3",
+      "flex",
+      "justify-center",
+      "cursor-pointer",
+      "transition-all",
+      "duration-200",
+      isActive ? "bg-[#e9edef]" : "hover:bg-[#e9edef]",
+    ],
+    onclick: onClick,
+  },
+  [
+    createElement("div", {
       class: [
         "relative",
-        "w-full",
-        "h-[72px]",
         "flex",
         "items-center",
         "justify-center",
-        "cursor-pointer",
-        "hover:bg-[#d1d7db]", // Changed hover color
-        isActive ? "bg-[#d1d7db]" : "", // Changed active color
-        "group",
+        "w-10",
+        "h-10",
+        "rounded-xl",
+        "transition-transform",
+        "group-hover:scale-105",
       ],
     },
     [
       createElement("i", {
         class: [
           "fas",
-          iconClass,
-          "text-2xl",
-          isActive ? "text-[#00a884]" : "text-[#54656f]", // Changed inactive color
+          icon,
+          "text-xl",
+          isActive ? "text-[#00a884]" : "text-[#54656f]",
           "group-hover:text-[#00a884]",
+          "transition-colors",
         ],
       }),
-    ]
-  );
+    ]),
+  ]);
 
-  // Add notification badge if count exists
-  if (notificationCount) {
-    navItem.appendChild(
-      createElement(
-        "div",
-        {
-          class: [
-            "absolute",
-            "top-3",
-            "right-2",
-            "bg-[#00a884]",
-            "text-white",
-            "text-xs",
-            "rounded-full",
-            "px-[6px]",
-            "py-[2px]",
-            "min-w-[20px]",
-            "text-center",
-          ],
-        },
-        notificationCount
-      )
+  // Add notification badge
+  if (badge) {
+    button.appendChild(
+      createElement("span", {
+        class: [
+          "absolute",
+          "top-3",
+          "right-3",
+          "bg-[#00a884]",
+          "text-white",
+          "text-xs",
+          "font-medium",
+          "rounded-full",
+          "px-[6px]",
+          "py-[2px]",
+          "min-w-[20px]",
+          "text-center",
+          "shadow-sm",
+        ],
+      }, badge)
     );
   }
 
-  return navItem;
+  // Add status indicator
+  if (hasStatus) {
+    button.appendChild(
+      createElement("span", {
+        class: [
+          "absolute",
+          "w-[8px]",
+          "h-[8px]",
+          "bg-[#00a884]",
+          "rounded-full",
+          "top-3",
+          "right-3",
+          "shadow-sm",
+          "animate-pulse",
+        ],
+      })
+    );
+  }
+
+  // Add tooltip
+  button.appendChild(
+    createElement("div", {
+      class: [
+        "absolute",
+        "left-full",
+        "ml-2",
+        "px-2",
+        "py-1",
+        "bg-[#111b21]",
+        "text-white",
+        "text-xs",
+        "rounded",
+        "opacity-0",
+        "invisible",
+        "group-hover:opacity-100",
+        "group-hover:visible",
+        "transition-all",
+        "whitespace-nowrap",
+        "z-50",
+      ],
+    }, name)
+  );
+
+  return button;
 }

@@ -7,7 +7,7 @@ import { formatTime } from "../../utils/dateUtils";
 
 export function createChatArea() {
   const chatArea = createElement("div", {
-    class: ["flex-1", "flex", "flex-col"],
+    class: ["flex-1", "flex", "flex-col", "bg-[#f0f2f5]"],
   });
 
   function renderMessages() {
@@ -33,35 +33,73 @@ export function createChatArea() {
     chatArea.innerHTML = "";
 
     if (store.state.currentChat) {
-      // Trouvons le chat actuel
       const currentChat = store.state.chats.find(
         (c) => c.id === store.state.currentChat
       );
 
       chatArea.append(
-        createChatHeader(currentChat), // Passer le chat actuel
+        createChatHeader(currentChat),
         renderMessages(),
         createMessageInput()
       );
 
-      // Start polling when chat is selected
       startMessagePolling();
     } else {
-      stopMessagePolling(); // Stop polling when no chat is selected
+      stopMessagePolling();
       chatArea.append(
-        createElement(
-          "div",
-          {
+        createElement("div", {
+          class: [
+            "flex-1",
+            "flex",
+            "flex-col",
+            "items-center",
+            "justify-center",
+            "bg-[#f0f2f5]",
+            "text-[#54656f]",
+          ],
+        }, [
+          // Logo WhatsApp
+          createElement("div", {
             class: [
-              "flex-1",
-              "flex",
-              "items-center",
-              "justify-center",
-              "text-[#54656f]",
+              "w-[250px]",
+              "h-[250px]",
+              "mb-8",
+              "opacity-50",
             ],
-          },
-          "Sélectionnez une discussion pour commencer"
-        )
+          }, [
+            createElement("img", {
+              src: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+              alt: "WhatsApp",
+              class: ["w-full", "h-full"],
+            }),
+          ]),
+          // Titre
+          createElement("h1", {
+            class: [
+              "text-[32px]",
+              "font-light",
+              "text-[#41525d]",
+              "mb-3",
+            ],
+          }, "WhatsApp Web"),
+          // Message
+          createElement("p", {
+            class: [
+              "text-sm",
+              "text-[#667781]",
+              "max-w-md",
+              "text-center",
+              "leading-relaxed",
+            ],
+          }, "Envoyez et recevez des messages sans avoir à garder votre téléphone connecté à Internet."),
+          createElement("p", {
+            class: [
+              "text-sm",
+              "text-[#667781]",
+              "mt-2",
+            ],
+          }, "Sélectionnez une discussion pour commencer"),
+        ])
       );
     }
   }

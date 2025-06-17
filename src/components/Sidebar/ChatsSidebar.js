@@ -4,11 +4,13 @@ import { loadMessages, addContact } from "../../services/api";
 import { createAddContactForm } from '../Contact/AddContactForm';
 import { toggleChatArchive } from "../../services/api";
 import { createGroupForm } from '../Group/CreateGroupForm';
+import { createSettingsPanel } from '../Settings/SettingsPanel';
 
 export function createChatsSidebar() {
   // Declare state variables
   let showingContactForm = false;
   let showingGroupForm = false;
+  let showingSettings = false;
 
   // Create sidebar element
   const sidebar = createElement('div', {
@@ -27,11 +29,21 @@ export function createChatsSidebar() {
   function toggleGroupForm() {
     showingGroupForm = !showingGroupForm;
     showingContactForm = false;
+    showingSettings = false;
     updateSidebar();
   }
 
   function toggleContactForm() {
     showingContactForm = !showingContactForm;
+    showingGroupForm = false;
+    showingSettings = false;
+    updateSidebar();
+  }
+
+  // New toggle function for settings
+  function toggleSettings() {
+    showingSettings = !showingSettings;
+    showingContactForm = false;
     showingGroupForm = false;
     updateSidebar();
   }
@@ -178,12 +190,15 @@ export function createChatsSidebar() {
     return chatsList;
   }
 
+  // Modify updateSidebar
   function updateSidebar() {
     sidebar.innerHTML = '';
     if (showingContactForm) {
       sidebar.appendChild(createAddContactForm(() => toggleContactForm()));
     } else if (showingGroupForm) {
       sidebar.appendChild(createGroupForm(() => toggleGroupForm()));
+    } else if (showingSettings) {
+      sidebar.appendChild(createSettingsPanel());
     } else {
       sidebar.append(
         createHeader(),
@@ -199,7 +214,10 @@ export function createChatsSidebar() {
   store.subscribe(updateSidebar);
   updateSidebar();
 
-  return sidebar;
+  return {
+    element: sidebar,
+    toggleSettings
+  };
 }
 
 // Move helper functions that don't need access to state outside
