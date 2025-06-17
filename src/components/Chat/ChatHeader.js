@@ -4,23 +4,20 @@ import { store } from "../../store/store";
 export function createChatHeader(currentChat) {
   if (!currentChat) return null;
 
-  // Déterminer le nom à afficher
-  let displayName;
-  if (currentChat.type === "group") {
-    displayName = currentChat.name;
+  const currentUser = store.state.currentUser;
+  let displayName = "Sans nom"; // Default name
+  let initial = "?"; // Default initial
+
+  // Determine display name based on chat type
+  if (currentChat.type === 'group') {
+    displayName = currentChat.name || "Groupe sans nom";
+    initial = (currentChat.name || "G").charAt(0).toUpperCase();
   } else {
-    // Pour les chats individuels, trouver l'autre participant
-    const currentUserId = store.state.currentUser.id;
-    const otherParticipantId = currentChat.participants.find(
-      id => id !== currentUserId
-    );
-    
-    // Trouver l'utilisateur correspondant
-    const otherParticipant = store.state.users.find(
-      user => user.id === otherParticipantId
-    );
-    
-    displayName = otherParticipant ? otherParticipant.name : "Utilisateur inconnu";
+    // Find the other participant
+    const otherParticipantId = currentChat.participants?.find(id => id !== currentUser?.id);
+    const otherParticipant = store.state.users?.find(user => user.id === otherParticipantId);
+    displayName = otherParticipant?.name || "Contact sans nom";
+    initial = (otherParticipant?.name || "?").charAt(0).toUpperCase();
   }
 
   return createElement(
@@ -74,7 +71,7 @@ export function createChatHeader(currentChat) {
                 ],
               }, 
               // Première lettre du nom comme avatar
-              displayName.charAt(0).toUpperCase()
+              initial
               ),
               // Indicateur de statut en ligne
               createElement("div", {

@@ -459,18 +459,34 @@ function createArchivedSection() {
 // Enhanced chat item with modern WhatsApp styling
 function createChatItem(chat) {
   const isActive = chat.id === store.state.currentChat;
-  const currentUserId = store.state.currentUser.id;
+  const currentUserId = store.state.currentUser?.id;
   
-  // Get display name for the chat
-  let displayName;
+  // Get display name for the chat with fallback
+  let displayName = "Sans nom"; // Valeur par défaut
+  
   if (chat.type === 'group') {
-    displayName = chat.name;
+    displayName = chat.name || "Groupe sans nom";
   } else {
     // Find the other participant
-    const otherParticipantId = chat.participants.find(id => id !== currentUserId);
-    const otherParticipant = store.state.users.find(user => user.id === otherParticipantId);
-    displayName = otherParticipant ? otherParticipant.name : 'Sans nom';
+    const otherParticipantId = chat.participants?.find(id => id !== currentUserId);
+    const otherParticipant = store.state.users?.find(user => user.id === otherParticipantId);
+    displayName = otherParticipant?.name || "Contact sans nom";
   }
+
+  // Generate avatar colors based on name with safe access
+  const avatarColors = [
+    'from-[#00a884] to-[#008069]',
+    'from-[#7c3aed] to-[#5b21b6]',
+    'from-[#dc2626] to-[#991b1b]',
+    'from-[#ea580c] to-[#c2410c]',
+    'from-[#0891b2] to-[#0e7490]',
+    'from-[#16a34a] to-[#15803d]',
+    'from-[#c026d3] to-[#a21caf]',
+    'from-[#2563eb] to-[#1d4ed8]'
+  ];
+  
+  const colorIndex = Math.abs(displayName.charCodeAt(0) || 0) % avatarColors.length;
+  const avatarGradient = avatarColors[colorIndex];
 
   // Enhanced context menu
   function showContextMenu(event) {
@@ -547,21 +563,6 @@ function createChatItem(chat) {
     document.addEventListener('click', closeMenu);
     document.body.appendChild(menu);
   }
-
-  // Generate avatar colors based on name
-  const avatarColors = [
-    'from-[#00a884] to-[#008069]',
-    'from-[#7c3aed] to-[#5b21b6]',
-    'from-[#dc2626] to-[#991b1b]',
-    'from-[#ea580c] to-[#c2410c]',
-    'from-[#0891b2] to-[#0e7490]',
-    'from-[#16a34a] to-[#15803d]',
-    'from-[#c026d3] to-[#a21caf]',
-    'from-[#2563eb] to-[#1d4ed8]'
-  ];
-  
-  const colorIndex = displayName.charCodeAt(0) % avatarColors.length;
-  const avatarGradient = avatarColors[colorIndex];
 
   return createElement('div', {
     class: [
