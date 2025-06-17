@@ -9,180 +9,235 @@ export function createLoginPage() {
   const container = createElement("div", {
     class: [
       "min-h-screen",
-      "bg-[#00a884]",
+      "bg-gradient-to-br",
+      "from-[#00a884]",
+      "to-[#008069]",
       "flex",
       "items-center",
       "justify-center",
       "flex-col",
+      "relative",
+      "px-4",
     ],
   });
 
-  const topBar = createElement("div", {
-    class: ["bg-[#00a884]", "h-28", "w-full", "absolute", "top-0"],
+  // Ajout d'un motif de fond élégant
+  const pattern = createElement("div", {
+    class: [
+      "absolute",
+      "inset-0",
+      "opacity-10",
+      "bg-[url('data:image/svg+xml,...')]", // Motif sera ajouté en CSS
+      "pointer-events-none",
+    ],
   });
 
-  const errorMessage = createElement("p", {
-    class: ["text-red-500", "text-sm", "hidden", "mt-2"],
-  });
-
-  // Création du conteneur pour l'input de téléphone
-  const phoneInputContainer = createElement(
-    "div",
-    {
-      class: ["flex", "gap-2", "items-start"],
-    },
-    [
-      // Sélecteur de pays avec indicatif
-      createElement(
-        "div",
-        
-        {
-          class: ["w-[120px]"],
-        },
-        [
-          createCountrySelect({
-            id: "country-code",
-            class: [
-              "w-full",
-              "px-2",
-              "py-3",
-              "border",
-              "border-[#d1d7db]",
-              "rounded-lg",
-              "focus:outline-none",
-              "focus:border-[#00a884]",
-              "text-[#111b21]",
-              "bg-white",
-            ],
-          }),
-        ]
-      ),
-      // Input pour le numéro
-      createElement(
-        "div",
-        {
-          class: ["flex-1"],
-        },
-        [
-          createElement("input", {
-            type: "tel",
-            id: "phone-number",
-            placeholder: "77 XXX XX XX",
-            class: [
-              "w-full",
-              "px-4",
-              "py-3",
-              "border",
-              "border-[#d1d7db]",
-              "rounded-lg",
-              "focus:outline-none",
-              "focus:border-[#00a884]",
-              "text-[#111b21]",
-            ],
-          }),
-        ]
-      ),
-    ]
-  );
-
-  const form = createElement(
-    "div",
-    {
-      class: [
-        "bg-white",
-        "rounded-md",
-        "p-8",
-        "shadow-md",
-        "w-[400px]",
-        "z-10",
-      ],
-    },
-    [
+  const form = createElement("div", {
+    class: [
+      "bg-white",
+      "rounded-2xl",
+      "p-8",
+      "shadow-2xl",
+      "w-full",
+      "max-w-[440px]",
+      "relative",
+      "backdrop-blur-xl",
+      "border",
+      "border-white/10",
+      "animate-fade-in",
+    ],
+  }, [
+    // Logo et en-tête améliorés
+    createElement("div", {
+      class: ["text-center", "mb-8"]
+    }, [
       createLogo(),
-      createElement(
-        "div",
-        {
-          class: ["text-center", "mb-8"],
-        },
-        [
-          createElement(
-            "h1",
-            {
-              class: ["text-[28px]", "text-[#41525d]", "font-light"],
-            },
-            "WhatsApp Web"
-          ),
-          createElement(
-            "p",
-            {
-              class: ["text-[#41525d]", "mt-4", "text-sm"],
-            },
-            "Entrez votre numéro de téléphone pour vous connecter."
-          ),
+      createElement("h1", {
+        class: [
+          "text-3xl",
+          "font-light",
+          "text-[#41525d]",
+          "mt-6",
+          "mb-2"
         ]
-      ),
+      }, "WhatsApp Web"),
+      createElement("p", {
+        class: [
+          "text-[#667781]",
+          "text-sm",
+          "max-w-sm",
+          "mx-auto",
+          "leading-relaxed"
+        ]
+      }, "Utilisez WhatsApp sur votre ordinateur en vous connectant avec votre compte")
+    ]),
 
-      createElement(
-        "div",
-        {
-          class: ["space-y-6"],
-        },
-        [
-          createElement("div", { class: ["space-y-2"] }, [
-            createElement(
-              "label",
-              {
-                class: ["text-sm", "text-[#41525d]"],
-              },
-              "Numéro de téléphone"
-            ),
-            phoneInputContainer,
-            errorMessage,
-          ]),
-          createElement(
-            "button",
-            {
+    // Conteneur du formulaire avec effet de carte
+    createElement("div", {
+      class: [
+        "bg-[#f8fafc]",
+        "rounded-xl",
+        "p-6",
+        "shadow-sm",
+        "border",
+        "border-gray-100",
+      ]
+    }, [
+      createElement("div", {
+        class: ["space-y-5"]
+      }, [
+        // Label amélioré
+        createElement("label", {
+          class: [
+            "block",
+            "text-sm",
+            "font-medium",
+            "text-[#41525d]",
+            "mb-2"
+          ]
+        }, "Numéro de téléphone"),
+
+        // Conteneur input téléphone amélioré
+        createElement("div", {
+          class: [
+            "flex",
+            "gap-3",
+            "items-start"
+          ]
+        }, [
+          createElement("div", {
+            class: ["w-[130px]"]
+          }, [
+            createCountrySelect({
+              id: "country-code",
               class: [
                 "w-full",
-                "bg-[#008069]",
-                "text-white",
-                "py-3",
-                "rounded-lg",
-                "hover:bg-[#006e5c]",
-                "transition-colors",
-                "font-medium",
-              ],
-            },
-            "Se connecter"
-          ),
-          createElement(
-            "div",
-            {
-              class: ["text-end", "mt-4"],
-            },
-            [
-              createElement(
-                "a",
-                {
-                  class: ["text-[#00a884]", "text-sm"],
-                  href: "/register",
-                  onClick: (e) => {
-                    e.preventDefault();
-                    router.navigate("/register");
-                  }
-                },
-                "S'inscrire"
-              ),
-            ]
-          )
-        ]
-      ),
-    ]
-  );
+                "px-4",
+                "py-3.5",
+                "border",
+                "border-gray-200",
+                "rounded-xl",
+                "focus:border-[#00a884]",
+                "focus:ring-2",
+                "focus:ring-[#00a884]/20",
+                "focus:outline-none",
+                "transition-all",
+                "duration-200",
+                "bg-white",
+              ]
+            })
+          ]),
+          createElement("div", {
+            class: ["flex-1"]
+          }, [
+            createElement("input", {
+              type: "tel",
+              id: "phone-number",
+              placeholder: "77 XXX XX XX",
+              class: [
+                "w-full",
+                "px-4",
+                "py-3.5",
+                "border",
+                "border-gray-200",
+                "rounded-xl",
+                "focus:border-[#00a884]",
+                "focus:ring-2",
+                "focus:ring-[#00a884]/20",
+                "focus:outline-none",
+                "transition-all",
+                "duration-200",
+                "placeholder-gray-400",
+              ]
+            })
+          ])
+        ]),
 
+        // Message d'erreur avec animation
+        createElement("p", {
+          id: "error-message",
+          class: [
+            "text-red-500",
+            "text-sm",
+            "hidden",
+            "mt-2",
+            "animate-shake"
+          ]
+        }),
+
+        // Bouton de connexion amélioré
+        createElement("button", {
+          class: [
+            "w-full",
+            "bg-[#00a884]",
+            "hover:bg-[#008069]",
+            "text-white",
+            "py-3.5",
+            "px-4",
+            "rounded-xl",
+            "font-medium",
+            "transition-all",
+            "duration-200",
+            "transform",
+            "hover:translate-y-[-1px]",
+            "hover:shadow-lg",
+            "active:translate-y-[1px]",
+            "mt-4",
+            "flex",
+            "items-center",
+            "justify-center",
+            "gap-2"
+          ]
+        }, [
+          createElement("span", {}, "Se connecter"),
+          createElement("i", {
+            class: ["fas", "fa-arrow-right", "text-sm"]
+          })
+        ])
+      ])
+    ]),
+
+    // Section inscription améliorée
+    createElement("div", {
+      class: [
+        "mt-6",
+        "text-center",
+        "space-y-4"
+      ]
+    }, [
+      createElement("p", {
+        class: ["text-[#667781]", "text-sm"]
+      }, "Vous n'avez pas de compte ?"),
+      createElement("a", {
+        href: "/register",
+        class: [
+          "text-[#00a884]",
+          "hover:text-[#008069]",
+          "font-medium",
+          "text-sm",
+          "inline-flex",
+          "items-center",
+          "gap-2",
+          "transition-colors"
+        ],
+        onClick: (e) => {
+          e.preventDefault();
+          router.navigate("/register");
+        }
+      }, [
+        "Créer un compte",
+        createElement("i", {
+          class: ["fas", "fa-user-plus", "text-xs"]
+        })
+      ])
+    ])
+  ]);
+
+  // Ajout des écouteurs d'événements et de la logique existante
   const button = form.querySelector("button");
   const countrySelect = form.querySelector("#country-code");
   const phoneInput = form.querySelector("#phone-number");
+  const errorMessage = form.querySelector("#error-message");
 
   button.addEventListener("click", async () => {
     const countryCode = countrySelect.value;
@@ -241,7 +296,7 @@ export function createLoginPage() {
     }
   });
 
-  container.appendChild(topBar);
+  container.appendChild(pattern);
   container.appendChild(form);
   return container;
 
