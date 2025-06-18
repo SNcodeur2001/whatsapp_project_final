@@ -5,6 +5,7 @@ import { createAddContactForm } from '../Contact/AddContactForm';
 import { toggleChatArchive } from "../../services/api";
 import { createGroupForm } from '../Group/CreateGroupForm';
 import { createSettingsPanel } from '../Settings/SettingsPanel';
+import { createStatusPanel } from '../Status/StatusPanel'; // Ajout de l'import manquant
 
 export function createChatsSidebar() {
   // Declare state variables
@@ -241,13 +242,25 @@ export function createChatsSidebar() {
     } else if (showingSettings) {
       sidebar.appendChild(createSettingsPanel());
     } else {
-      sidebar.append(
-        createHeader(),
-        createSearchSection(),
-        createArchivedSection(),
-        renderChats(),
-        createAddContactButton()
-      );
+      switch(store.state.activeView) {
+        case 'status':
+          sidebar.appendChild(createStatusPanel());
+          break;
+        case 'communities':
+          // Implémenter la vue communautés
+          break;
+        case 'channels':
+          // Implémenter la vue chaînes
+          break;
+        default:
+          sidebar.append(
+            createHeader(),
+            createSearchSection(),
+            createArchivedSection(),
+            renderChats(),
+            createAddContactButton()
+          );
+      }
     }
   }
 

@@ -9,7 +9,9 @@ class Store {
       filters: {
         activeFilter: 'all', // 'all', 'unread', 'groups', 'archived'
         searchQuery: ''
-      }
+      },
+      activeView: 'chats',
+      statuses: []
     };
     this.listeners = new Set();
   }

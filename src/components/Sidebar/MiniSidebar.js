@@ -1,9 +1,29 @@
 import { createElement } from "../../component";
 import { store } from "../../store/store";
+import { createStatusPanel } from "../Status/StatusPanel"; // Nouveau composant à créer
 
 export function createMiniSidebar(onSettingsClick) {
   const currentUser = store.state.currentUser;
   const userInitial = currentUser?.name?.charAt(0)?.toUpperCase() || "?";
+
+  // Fonction pour obtenir le nombre total de messages non lus
+  function getTotalUnreadCount() {
+    return store.state.chats.reduce((total, chat) => total + (chat.unreadCount || 0), 0);
+  }
+
+  // Fonction pour obtenir le nombre de statuts non vus
+  function getUnseenStatusCount() {
+    return store.state.statuses?.filter(status => 
+      !status.seenBy?.includes(currentUser?.id)
+    ).length || 0;
+  }
+
+  // Fonction pour gérer le clic sur le statut
+  function handleStatusClick() {
+    store.setState({
+      activeView: 'status'
+    });
+  }
 
   return createElement(
     "div",
@@ -45,10 +65,35 @@ export function createMiniSidebar(onSettingsClick) {
         class: ["flex", "flex-col", "gap-1"],
       },
       [
-        createNavButton("Discussions", "fa-comments", true, "72"),
-        createNavButton("Statut", "fa-circle", false, null, true),
-        createNavButton("Communautés", "fa-users"),
-        createNavButton("Chaînes", "fa-broadcast-tower"),
+        createNavButton(
+          "Discussions", 
+          "fa-comments", 
+          store.state.activeView === 'chats',
+          getTotalUnreadCount() || null,
+          false,
+          () => store.setState({ activeView: 'chats' })
+        ),
+        createNavButton(
+          "Statut", 
+          "fa-circle", 
+          store.state.activeView === 'status',
+          getUnseenStatusCount() || null,
+          true,
+          handleStatusClick
+        ),
+        createNavButton(
+          "Communautés",
+          "fa-users",
+          store.state.activeView === 'communities',
+          null,
+          false,
+          () => store.setState({ activeView: 'communities' })
+        ),
+        createNavButton(
+          "Chaînes",
+          "fa-broadcast-tower",
+          store.state.activeView === 'channels'
+        ),
       ]),
 
       // Separator
@@ -61,7 +106,14 @@ export function createMiniSidebar(onSettingsClick) {
         class: ["mt-auto", "flex", "flex-col", "gap-4"],
       },
       [
-        createNavButton("Paramètres", "fa-cog", false, null, false, onSettingsClick),
+        createNavButton(
+          "Paramètres",
+          "fa-cog",
+          false,
+          null,
+          false,
+          onSettingsClick
+        ),
         createElement("div", {
           class: [
             "w-[45px]",

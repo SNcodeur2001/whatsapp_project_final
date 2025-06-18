@@ -4,7 +4,8 @@ const API_BASE_URL = 'https://whatsapp-json-server.onrender.com';
 const API_ENDPOINTS = {
   USERS: `${API_BASE_URL}/users`,
   CHATS: `${API_BASE_URL}/chats`,
-  MESSAGES: `${API_BASE_URL}/messages`
+  MESSAGES: `${API_BASE_URL}/messages`,
+  STATUSES: `${API_BASE_URL}/statuses`
 };
 
 async function fetchUsers() {
@@ -135,13 +136,14 @@ export async function register(nom, phone) {
     },
     body: JSON.stringify({
       id: Date.now(),
-      nom,
+      name: nom, // Assurez-vous d'utiliser 'name' au lieu de 'nom' pour la cohérence
       phone,
-      avatar: null, 
-      status: "Hey there! I am using WhatsApp", 
-      lastSeen: new Date().toISOString(), 
-      isOnline: true, 
-      contacts: [], 
+      avatar: null,
+      status: "Hey there! I am using WhatsApp",
+      lastSeen: new Date().toISOString(),
+      isOnline: true,
+      contacts: [],
+      statuses: [], // Ajout du tableau des statuts
     }),
   });
 
@@ -444,5 +446,134 @@ async function updateChatLastMessage(chatId, message) {
 
   } catch (error) {
     console.error('Erreur lors de la mise à jour du lastMessage:', error);
+  }
+}
+
+// Fonction pour créer un statut texte
+export async function createTextStatus(text, backgroundColor = '#00a884') {
+  try {
+    const currentUser = store.state.currentUser;
+    const newStatus = {
+      id: Date.now(),
+      type: 'text',
+      content: text,
+      backgroundColor,
+      createdAt: new Date().toISOString(),
+      seenBy: [],
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    };
+
+    // Mettre à jour les statuts de l'utilisateur
+    const updatedUser = {
+      ...currentUser,
+      statuses: [...(currentUser.statuses || []), newStatus]
+    };
+
+    const response = await fetch(`${API_ENDPOINTS.USERS}/${currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedUser)
+    });
+
+    if (!response.ok) throw new Error('Erreur lors de la création du statut');
+
+    const savedUser = await response.json();
+    
+    // Mettre à jour le store et localStorage
+    store.setState({ 
+      currentUser: savedUser,
+      users: store.state.users.map(u => 
+        u.id === savedUser.id ? savedUser : u
+      )
+    });
+    localStorage.setItem('currentUser', JSON.stringify(savedUser));
+
+    return newStatus;
+  } catch (error) {
+    console.error('Erreur lors de la création du statut texte:', error);
+    throw error;
+  }
+}
+
+// Fonction utilitaire pour convertir un fichier en base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+// Fonction pour créer un statut média (modifiée)
+export async function createMediaStatus(file) {
+  try {
+    const currentUser = store.state.currentUser;
+    const base64Data = await fileToBase64(file);
+    
+    const newStatus = {
+      id: Date.now(),
+      type: file.type.startsWith('image/') ? 'image' : 'video',
+      content: base64Data,
+      createdAt: new Date().toISOString(),
+      seenBy: [],
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    };
+
+    // Mettre à jour les statuts de l'utilisateur
+    const updatedUser = {
+      ...currentUser,
+      statuses: [...(currentUser.statuses || []), newStatus]
+    };
+
+    const response = await fetch(`${API_ENDPOINTS.USERS}/${currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedUser)
+    });
+
+    if (!response.ok) throw new Error('Erreur lors de la création du statut');
+
+    const savedUser = await response.json();
+    
+    // Mettre à jour le store et localStorage
+    store.setState({ 
+      currentUser: savedUser,
+      users: store.state.users.map(u => 
+        u.id === savedUser.id ? savedUser : u
+      )
+    });
+    localStorage.setItem('currentUser', JSON.stringify(savedUser));
+
+    return newStatus;
+  } catch (error) {
+    console.error('Erreur lors de la création du statut média:', error);
+    throw error;
+  }
+}
+
+// Fonction pour obtenir tous les statuts
+export async function fetchAllStatuses() {
+  try {
+    const users = await fetchUsers();
+    const allStatuses = users.reduce((acc, user) => {
+      if (user.statuses && user.statuses.length > 0) {
+        // Ne garder que les statuts non expirés
+        const validStatuses = user.statuses.filter(status => 
+          new Date(status.expiresAt) > new Date()
+        ).map(status => ({
+          ...status,
+          userId: user.id,
+          userName: user.name
+        }));
+        return [...acc, ...validStatuses];
+      }
+      return acc;
+    }, []);
+
+    return allStatuses;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des statuts:', error);
+    throw error;
   }
 }
